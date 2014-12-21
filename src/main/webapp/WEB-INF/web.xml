@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="WebApp_ID" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+
+<!-- Note: Snow takes all request to provide full customizability,
+     performance impact is negligeable, and flexibility (including performance
+     optimization) is maximized. So, at the end, this approach will boost 
+     your application performance significantly without having to learn tomcat or other container proprietary optimization tricks --> 
+
+<!-- Note: Same web.xml for all applications... the simpler the better -->      
+
+<display-name>SnowApplication</display-name>
+<servlet>
+<servlet-name>snowServlet</servlet-name>
+<servlet-class>com.britesnow.snow.web.SnowServlet</servlet-class>
+</servlet>
+
+<servlet-mapping>
+<servlet-name>snowServlet</servlet-name>
+<url-pattern>/</url-pattern>
+</servlet-mapping> 
+
+
+</web-app>

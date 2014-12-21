@@ -1,0 +1,98 @@
+<script id="PerfView" type="text/html">
+<div class="PerfView">
+	<button class="btn btn-success do-perf-refresh">Refresh</button>
+	<button class="btn btn-danger do-perf-clear">Clear</button>
+
+	<section class="row">
+		<section class="java-info col-md-6">
+		</section>
+
+
+		<section class="pool-info col-md-6">
+		</section>
+	</section>
+
+	<section>
+		<h4>Requests Performance</h4>
+		<div>
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Count</th>
+						<th>Min</th>
+						<th>Mean</th>
+						<th>Max</th>
+					</tr>
+				</thead>
+				<tbody class="tbody-requests">
+				</tbody>
+			</table>		
+		</div>
+	</section>
+
+	<section>	
+		<h4>Methods Performance</h4>
+		<div>
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Count</th>
+						<th>Min</th>
+						<th>Mean</th>
+						<th>Max</th>
+					</tr>
+				</thead>
+				<tbody class="tbody-methods">
+				</tbody>
+			</table>	
+		</div>
+	</section>
+</div>
+</script>
+
+<script id="PerfView-tbody" type="text/html">
+{{#each perfs}}
+	<tr>
+		<td>{{@key}}</td>
+		<td>{{count}}</td>
+		<td>{{min}}</td>
+		<td>{{mean}}</td>
+		<td>{{max}}</td>
+	</tr>
+{{/each}}
+</script>
+
+<script id="PerfView-javaInfo" type="text/html">
+		<h4>Java Info</h4>
+		<div class="row">
+				<label class="col-md-6">Free Memory</label>
+				<div class="col-md-6">{{freeMemory}}MB</div>
+		</div>
+		<div class="row">
+				<label class="col-md-6">Allocated Memory</label>
+				<div class="col-md-6">{{allocatedMemory}}MB</div>
+		</div>		
+		<div class="row">
+				<label class="col-md-6">Max Memory</label>
+				<div class="col-md-6">{{maxMemory}}MB</div>
+		</div>
+</script>
+
+<script id="PerfView-poolInfo" type="text/html">
+		<h4>Pool Info</h4>
+		<div class="row">
+				<label class="col-md-6">Number of Connections</label>
+				<div class="col-md-6">{{numConnections}}</div>
+		</div>
+		<div class="row">
+				<label class="col-md-6">Number of Busy Connections</label>
+				<div class="col-md-6">{{numBusyConnections}}</div>
+		</div>		
+		<div class="row">
+				<label class="col-md-6">Number of Idle Connections</label>
+				<div class="col-md-6">{{numIdleConnections}}</div>
+		</div>
+		
+</script>

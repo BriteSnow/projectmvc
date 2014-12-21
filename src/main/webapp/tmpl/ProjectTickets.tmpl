@@ -1,0 +1,32 @@
+<script id="ProjectTickets" type="text/html">
+<div class="ProjectTickets">
+	<table class="table table-striped table-hover">
+		<thead>
+			<tr>
+				<th style="width:32px">ID</th>
+				<th>Subject</th>
+			</tr>
+		</thead>
+		<tbody>
+
+		</tbody>
+	</table>
+</div>
+</script>
+
+
+<!-- Table Content -->
+<script id="ProjectTickets-tbody" type="text/html">
+<tr>
+	<td></td>
+	<td>
+	<input type="text" class="newTicket form-control" placeholder="New ticket">
+	</td>
+</tr>
+{{#each tickets}}
+	<tr data-entity="Ticket" data-entity-id="{{id}}">
+		<td>{{id}}</td>
+		<td><a href="#project/{{../id}}/ticket/{{id}}">{{title}}</a></td>
+	</tr>
+{{/each}}
+</script>

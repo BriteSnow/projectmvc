@@ -1,0 +1,27 @@
+<script id="DevView" type="text/html">
+<div class="DevView">
+	<section class="content">
+	</section>
+</div>
+</script>
+
+<script id="DevView-content" type="text/html">
+<div class="perf">
+	<h2>{{url}} - {{perf.req.duration}}ms</h2>
+	<div>
+		<div class="subs progress">
+			{{#each perf.req.subs}}
+			<div class="sub progress-bar progress-bar-success" title="{{@key}} - {{duration}}ms" class="sub" style="left: {{position.left}}%; width: {{position.width}}%">
+			{{#if position.small}}
+				<span class="duration">{{duration}}ms</span>
+			{{else}}
+				<label>{{@key}}</label>
+				<span class="duration">{{duration}}ms</span>
+			{{/if}}
+			</div>
+			{{/each}}
+		</div>
+
+	</div>
+</div>
+</script>

@@ -1,0 +1,26 @@
+<!-- Main Project View Frame -->
+<script id="ProjectView" type="text/html">
+	<div class="ProjectView" data-entity="Project" data-entity-id="{{project.id}}">
+		<header>
+			<h2 data-prop="Project.name" data-editable="">{{project.name}}</h2>
+		</header>
+	
+		<div class="ProjectView-content">
+			<ul class="nav nav-tabs">
+				<li class="tab-tickets">
+					<a href="#project/{{project.id}}">Tickets</a>
+				</li>
+				<li class="right tab-settings">
+					<a href="#project/{{project.id}}/settings">Settings</a>
+				</li>
+			</ul>
+			<div class="tabctn">
+			</div>
+		</div>
+	</div>
+</script>
+
+
+<script id="ProjectView-ticket-tab-li" type="text/html">
+<li class="tab-ticket"><a href="#project/{{projectId}}/ticket/{{ticketId}}">#{{ticketId}}</a></li>
+</script>

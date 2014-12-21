@@ -1,0 +1,58 @@
+<script id="ProjectSettings" type="text/html">
+<div class="ProjectSettings">
+	<div class="alert alert-warning">
+		<strong>Note:</strong> This UI does not have any logic yet. 
+	</div>
+
+	<div style="max-width:600px">
+		<div class="form" role="form">
+			<div class="form-group">
+				<label class="control-label">Project Name</label>
+				<input name="name" class="form-control" value="{{project.name}}">
+			</div>
+			<div class="form-group">
+				<button type="submit" class="btn btn-primary">Save</button>
+			</div>
+		</div>
+	</div>
+
+
+	<h3>Teams </h3>
+	<div class="teams-ctn">
+		{{>ProjectSettings-team}}
+	</div>
+
+	<div class="team add">
+		<h4>Add New Team</h4>
+		<form style="margin-left:30px" class="form-inline" role="form">
+			<div class="form-group">
+				<label class="sr-only" for="exampleInputEmail2">Add Team</label>
+				<input type="email" class="form-control" id="exampleInputEmail2" placeholder="Team Name">
+			</div>
+			<button type="submit" class="btn btn-default">Add Team</button>
+		</form>
+	</div>
+
+
+</div>
+</script>
+
+<script id="ProjectSettings-team" type="text/html">
+<div class="team">
+	<h4>Tester</h4><span class="add-member-ctn form-inline"><span class="add-member">Add member</span></span>
+	<ul class="members">
+		<li>Jen</li>
+	</ul>
+</div>	
+<div class="team">
+	<h4>Dev</h4>
+	<ul class="members">
+		<li class="add">+</li>		
+	</ul>
+</div>	
+</script>
+
+<script id="ProjectSettings-add-member-form" type="text/html">
+<input class='form-control' type='text' placeholder='user name'>
+<span class="btn btn-primary btn-sm">Add</span>
+</script>

@@ -1,0 +1,56 @@
+@import "utils";
+
+.ProjectSettings{
+
+	.team{
+		margin-left: 20px;
+
+		h4{
+			font-size: 16px;
+			color: #999;
+			display: inline-block;
+			margin-right: 10px;
+			margin-bottom: 20px;
+		}
+
+		ul{
+			.clearfix;
+		}	
+
+		ul > li{
+			cursor: pointer;
+			float:left;
+			padding: 5px 10px;
+			list-style: none;
+			border: solid 1px #ddd;
+			border-radius: 5px;
+			margin-right: 10px;
+		}
+
+		.add-member-ctn{
+
+			.add-member{
+				color: @text-action-link;
+				cursor: pointer;
+			}
+			input{
+				height: 31px;
+			}
+			input, input:focus{
+				display: inline;
+				width: 300px;
+
+				outline: none;
+			}
+
+		}
+	}
+
+	.team.add{
+		h4{
+			font-style: italic;
+		}
+
+	}
+
+}

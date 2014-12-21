@@ -1,0 +1,51 @@
+@import "utils";
+
+.ProjectListView{
+	.fitparent();
+	border-right: solid 1px #eee;
+
+	& > h2 {
+		margin: 0;
+		padding: 15px 5px;
+		font-size: 16px;
+		border-bottom: solid 1px #eee;
+
+	}
+
+	ul{
+		margin: 0;
+		padding: 0;
+
+		li{
+			padding: 7px 15px;
+			border-bottom: solid 1px #eee;
+		}
+
+		li.active{
+			background: #ddd;
+
+			a{
+				color: #333;
+			}
+		}
+	}
+
+	.add-new-project{
+		margin: 10px;
+		a{
+			float: right;
+		}
+		input{
+			display: none;
+		}
+	}
+
+	.add-new-project.active{
+		a{
+			display: none;
+		}
+		input{
+			display: block;
+		}
+	}
+}

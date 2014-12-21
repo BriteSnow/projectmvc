@@ -1,0 +1,20 @@
+<script id="ProjectListView" type="text/html">
+<div class="ProjectListView">
+	<h2>Projects</h2>
+	<ul>
+	{{> ProjectListView-lis}}
+	</ul>
+	<div class="add-new-project">
+		<a class="action">Add New Project</a>
+		<input type="text" class="form-control" >
+	</div>
+</div>
+</script>
+
+<script id="ProjectListView-lis" type="text/html">
+		{{#each projects}}
+		<li class="project" data-entity="Project" data-entity-id="{{id}}">
+			<a href="#project/{{id}}">{{name}}</a>
+		</li>
+		{{/each}}
+</script>
