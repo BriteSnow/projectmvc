@@ -28,6 +28,9 @@ var dx = dx || {};
 		["select", function(value){
 			this.val(value);
 		}],
+		["textarea", function(value){
+			this.val(value);
+		}],
 		["*", function(value){
 			this.html(value);
 		}]
@@ -49,6 +52,9 @@ var dx = dx || {};
 			return newValue;
 		}],
 		["input, select", function(existingValue){
+			return this.val();
+		}],
+		["textarea", function(existingValue){
 			return this.val();
 		}],
 		["*", function(existingValue){
