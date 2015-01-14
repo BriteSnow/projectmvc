@@ -50,18 +50,10 @@
 		docEvents: {
 			"APP_CTX_CHANGE": function(event){
 				var view = this;
-				refreshContent.call(this);
-
-				// //console.log("APP_CTX_CHANGE",app.ctx,view.project.id);
-				// if (app.ctx.paths.length === 2){
-				// 	// if we have just 2 paths (i.e. project/123) then, just the project list. 
-				// 	if (view.project.id === app.ctx.projectId){
-				// 		refreshTabContent.call(view);
-				// 	}					
-				// }else if (app.ctx.pathAt(2) === "ticket"){
-				// 	//view.$ticketsTabLi.after(render("ProjectView-ticket-tab",{projectId:view.project.id,ticketId:app.ctx.pathAt(3)}));
-				// 	console.log("showing ticket " + app.ctx.pathAt(3));
-				// }
+				// we update this view only if it is the same project.
+				if (app.ctx.pathAt(0) === "Project" && app.ctx.pathAsNum(1) === view.project.id){
+					refreshContent.call(this);
+				}
 			}
 		}
 

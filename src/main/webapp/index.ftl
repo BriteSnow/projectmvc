@@ -1,9 +1,1 @@
-<script type="text/javascript">
-	$(function(){
-		brite.display("MainView").done(function(){
-			app.ctx.init();
-		});
-
-		//brite.display("DevView","body");
-	});
-</script>
+<!-- nothing needed, this will be created by 9_app-main.js which will call the brite.display("MainView") -->

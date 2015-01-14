@@ -11,6 +11,7 @@
 		postDisplay: function(){
 			var view = this;
 			view.$addNewProject = view.$el.find(".add-new-project");
+			selectCurrentProject.call(this);
 		}, 
 
 		events: {
@@ -50,8 +51,8 @@
 		},
 
 		docEvents: {
-			"APP_CTX_CHANGE": function(event,ctx){
-				selectCurrentProject.call(this,ctx);
+			"APP_CTX_CHANGE": function(event){
+				selectCurrentProject.call(this);
 			}
 		}
 
@@ -68,12 +69,14 @@
 		});
 	}
 
-	function selectCurrentProject(newCtx){
+	function selectCurrentProject(){
 		var view = this;
-		var ctx = newCtx || app.ctx.get();
-		view.$el.find("li[data-entity='Project'].active").removeClass("active");
-		var $li = view.$el.find("li[data-entity='Project'][data-entity-id='" + ctx.projectId + "']");
-		$li.addClass("active");
+		var projectId = (app.ctx.pathAt(0) === "project")?app.ctx.pathAsNum(1):null;
+		if (projectId !== null){
+			view.$el.find("li[data-entity='Project'].active").removeClass("active");
+			var $li = view.$el.find("li[data-entity='Project'][data-entity-id='" + projectId + "']");
+			$li.addClass("active");
+		}
 	}
 	// --------- /Private Methods --------- //
 

@@ -9,10 +9,9 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>ProjectMVC: TaskManager</title>
 
-	<link rel="stylesheet" href="${_r.contextPath}/bootstrap/css/bootstrap.min.css" type="text/css" />
-	<!--
-	<link rel="stylesheet" href="${_r.contextPath}/bootstrap/css/bootstrap-theme.min.css" type="text/css" />
-	-->
+	<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css" />
+
+	[@webBundle path="/common/js/" type="js" /]
 
 	[@webBundle path="/js/" type="js" /]
 

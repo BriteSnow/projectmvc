@@ -19,10 +19,10 @@
 
 		docEvents: {
 
-			"APP_CTX_CHANGE": function(event,ctx){
+			"APP_CTX_CHANGE": function(event){
 				var view = this;
-				if (view.projectId !== ctx.projectId){
-					view.projectId = ctx.projectId;
+				if ("project" === app.ctx.pathAt(0) && $.isNumeric(app.ctx.pathAt(1))){
+					view.projectId = app.ctx.pathAt(1) * 1;
 					
 					app.projectDao.get(view.projectId).done(function(project){
 						// call the brite.js bEmpty jQuery extension to make sure to 
