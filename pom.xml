@@ -112,7 +112,7 @@
 			<version>2.5.2</version>
 		</dependency>
 
-		<!-- Database Dependencies -->
+		<!-- Database Dependencies -->				
 		<dependency>
 			<groupId>org.j8ql</groupId>
 			<artifactId>j8ql</artifactId>
@@ -120,10 +120,10 @@
 		</dependency>  
 
 		<dependency>
-			<groupId>c3p0</groupId>
-			<artifactId>c3p0</artifactId>
-			<version>0.9.1.2</version>
-		</dependency>		
+			<groupId>com.zaxxer</groupId>
+			<artifactId>HikariCP</artifactId>
+			<version>2.3.6</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.postgresql</groupId>
