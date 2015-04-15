@@ -17,6 +17,7 @@ import org.projectmvc.AppException;
 import org.projectmvc.ErrorEnum;
 import org.projectmvc.dao.UserDao;
 import org.projectmvc.entity.User;
+import org.projectmvc.service.PasswordService;
 
 
 /**
@@ -36,7 +37,8 @@ import org.projectmvc.entity.User;
  */
 @Singleton
 public class AppAuthService implements AuthRequest {
-	static private final String SALT = "maBfLDmbuxwvGkkhpm4WddKR9EUawThYWZTiNcbuuFHzfTXhW";
+	static private final String TOKEN_SALT = "maBfLDmbuxwvGkkhpm4WddKR9EUawThYWZTiNcbuuFHzfTXhW";
+
 	static private final String CN_UTOKEN = "utoken";
 	static private final String CN_USERNAME = "username";
 
@@ -62,6 +64,9 @@ public class AppAuthService implements AuthRequest {
 
 	@Inject
 	private WebResponseBuilder webResponseBuilder;
+
+	@Inject
+	private PasswordService passwordService;
 
 	// --------- AuthRequest Implementation --------- //
 	/**
@@ -101,7 +106,6 @@ public class AppAuthService implements AuthRequest {
 						rc.removeCookie(CN_USERNAME);
 						rc.removeCookie(CN_UTOKEN);
 					}
-
 				}
 
 			// static files and generated files (.less, webbundle) we do not need to auth.
@@ -115,37 +119,47 @@ public class AppAuthService implements AuthRequest {
 
 	// --------- Register & Login WebREST APIs --------- //
 	@WebPost("/register")
-	public WebResponse register(@WebParam("username") String username, @WebParam("pwd")String pwd, @WebParam("pwdRepeat")String pwdRepeat, RequestContext rc){
+	public WebResponse register(@WebParam("username") String username, @WebParam("pwd")String clearPwd, @WebParam("pwdRepeat")String pwdRepeat, RequestContext rc){
 		// we double check the password rules.
 		if (Strings.isNullOrEmpty(username)) {
 			throw new AppException(Error.CANNOT_REGISTER_EMPTY_NAME);
 		}
-		if (Strings.isNullOrEmpty(pwd)){
+		if (Strings.isNullOrEmpty(clearPwd)){
 			throw new AppException(Error.CANNOT_REGISTER_WITH_EMPTY_PASSWORD);
 		}
-		if (!pwd.equals(pwdRepeat)) {
+		if (!clearPwd.equals(pwdRepeat)) {
 			throw new AppException(Error.REPEAT_PASSWORD_NO_MATCH);
 		}
 		if (userDao.getByUsername(username) != null){
 			throw new AppException(Error.CANNOT_REGISTER_USERNAME_ALREADY_EXIST);
 		}
 
-		userDao.createUser(username,pwd);
+		String encryptedPwd = passwordService.encrypt(clearPwd);
 
-		return login(username,pwd,rc);
+		userDao.createUser(username,encryptedPwd);
+
+		return login(username,clearPwd,rc);
 	}
 
 	@WebPost("/login")
-	public WebResponse login(@WebParam("username")String username, @WebParam("pwd")String pwd, RequestContext rc){
+	public WebResponse login(@WebParam("username")String username, @WebParam("pwd")String clearPwd, RequestContext rc){
 		User user = userDao.getByUsername(username);
 
 		// check if user exist
 		if (user == null){
 			throw new AppException(Error.WRONG_CREDENTIAL);
 		}
-		// check if right password
-		String password = user.getPwd();
-		if (Strings.isNullOrEmpty(pwd) || !pwd.equals(user.getPwd())){
+
+		// get the password stored in the database
+		String pwd = user.getPwd();
+
+		// the clearPwd given by the end user, or the pwd on the database cannot be null or empty.
+		if (Strings.isNullOrEmpty(clearPwd) || Strings.isNullOrEmpty(pwd)){
+			throw new AppException(Error.WRONG_CREDENTIAL);
+		}
+
+		// now check the clearPwd against the pwd stored in the db with the passwordService.
+		if (!passwordService.check(clearPwd, pwd)){
 			throw new AppException(Error.WRONG_CREDENTIAL);
 		}
 
@@ -171,10 +185,7 @@ public class AppAuthService implements AuthRequest {
 	}
 	// --------- /Register & Login WebREST APIs --------- //
 
-
-
-
 	static String buildUToken(User user){
-		return Hashing.sha1().hashString(user.getUsername() + SALT + user.getPwd(), Charsets.UTF_8).toString();
+		return Hashing.sha1().hashString(user.getUsername() + TOKEN_SALT + user.getPwd(), Charsets.UTF_8).toString();
 	}
 }
