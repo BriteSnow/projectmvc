@@ -6,7 +6,7 @@ The projectmvc-cloud project is a sample end-to-end application using modern and
 
 1. Java 8
 2. Postgres 9.3+ in localhost port 5432 (default dev configuration in the /WEB-INF/snow.properties)
-3. /apps/jcruncherEx.jar (from http://jcruncher.org). This is to compile the handlebars and lesscss in realtime. The maven pom.xml calls it on build, and you can also start it from the command line for interactive compile, with ```java -jar /apps/jcruncherEx.jar -i``` from the pom.xml root folder. 
+3. /apps/jcruncherEx.jar (from http://jcruncher.org). Make sure to download the 0.9.4 or above. This is to compile the handlebars (3.0.1) and lesscss (1.7.5) as part of the maven built or interactivly during development with```java -jar /apps/jcruncherEx.jar -i```. (in later versions, the goal is to make jcruncher a maven plugin so that we do not have this extra harcoded step).
 
 ### Dev Setup
 
@@ -47,5 +47,5 @@ mvn jetty:run
 
 ### Notes
 
-Currently, the functionalities are very limited, and the *teams* and *settings* are still under development. 
+Currently, the functionalities are very limited, but it shows how the whole server and client stack fit together, with some BriteSnow best practices. *settings* are still under development. 
 
