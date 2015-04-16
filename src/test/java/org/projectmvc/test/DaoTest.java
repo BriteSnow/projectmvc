@@ -52,7 +52,7 @@ public class DaoTest extends BaseTestSupport {
 		ticketDao.create(null,new Ticket().setTitle("test_ticket-B-03"));
 		ticketDao.create(null,new Ticket().setTitle("test_ticket-B-03"));
 
-		List<Ticket> tickets = ticketDao.list(null,and("title,ilike","test_%-B-%"),0,100);
+		List<Ticket> tickets = ticketDao.list(null,and("title;ilike","test_%-B-%"),0,100);
 		assertEquals(3, tickets.size());
 	}
 
