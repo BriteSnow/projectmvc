@@ -31,10 +31,10 @@
 				-->
 			</plugin>			
 
-      <plugin>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <version>1.4</version>
-        <executions>		 
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.4</version>
+				<executions>		 
 					<!-- jCruncher -->
 					<execution>
 						<id>compile-html-assets</id>
