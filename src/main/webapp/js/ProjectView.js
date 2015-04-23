@@ -50,8 +50,9 @@
 		docEvents: {
 			"APP_CTX_CHANGE": function(event){
 				var view = this;
+
 				// we update this view only if it is the same project.
-				if (app.ctx.pathAt(0) === "Project" && app.ctx.pathAsNum(1) === view.project.id){
+				if (app.ctx.pathAt(0) === "project" && app.ctx.pathAsNum(1) === view.project.id){
 					refreshContent.call(this);
 				}
 			}
