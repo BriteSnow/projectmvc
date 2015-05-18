@@ -6,6 +6,9 @@ import com.britesnow.snow.web.rest.annotation.WebGet;
 import com.britesnow.snow.web.rest.annotation.WebPost;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import org.j8ql.query.Condition;
+import org.j8ql.query.FieldOpValue;
+import org.j8ql.query.Query;
 import org.projectmvc.AppException;
 import org.projectmvc.dao.DaoRegistry;
 import org.projectmvc.dao.IDao;
@@ -60,7 +63,14 @@ public class GenericDasWebRest {
 	@WebGet("/das-list-{entity}")
 	public WebResponse listEntity(@WebUser User user, @PathVar("entity")String entityType, @JsonParam("filter") Map filter){
 		IDao dao = daoRegistry.getDao(entityType);
-		List<Object> list = dao.list(user,null,0,1000,"id");
+		System.out.println("filter " + filter);
+		Condition conditions = null;
+		if (filter != null) {
+			// build the Field Operation and Value from the map, assuming it is "J8QL" map compatible (e.g. "projectId;=":123)
+			FieldOpValue[] fovs = Query.fovs(filter);
+			conditions = Query.and(fovs);
+		}
+		List<Object> list = dao.list(user,conditions,0,1000,"id");
 
 		return webResponseBuilder.success(list);
 	}
