@@ -63,7 +63,6 @@ public class GenericDasWebRest {
 	@WebGet("/das-list-{entity}")
 	public WebResponse listEntity(@WebUser User user, @PathVar("entity")String entityType, @JsonParam("filter") Map filter){
 		IDao dao = daoRegistry.getDao(entityType);
-		System.out.println("filter " + filter);
 		Condition conditions = null;
 		if (filter != null) {
 			// build the Field Operation and Value from the map, assuming it is "J8QL" map compatible (e.g. "projectId;=":123)
