@@ -146,7 +146,7 @@ public class AppConfig extends AbstractModule {
 		
 		DaoProvider daoProvider = new DaoProvider(entityClass);
 		requestInjection(daoProvider);
-		bind(TypeLiteral.get(daoParamType)).toProvider(daoProvider);
+		bind(TypeLiteral.get(daoParamType)).toProvider((javax.inject.Provider)daoProvider);
 	}
 	// --------- /For DaoRegistry --------- //
 	
