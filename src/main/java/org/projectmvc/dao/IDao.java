@@ -14,11 +14,17 @@ public interface IDao<E,I> {
 
 	public Optional<E> get(User user, I id);
 
-	public I create(User user, E entity);
+	/**
+	 * Create the entity and returns its id.
+	 * @return entity id
+	 */
+	public I create(User user, E newEntity);
 
 	public I create(User user, Map entityMap);
 
 	public int update(User user, E entity, I id);
+
+	public int update(User user, Map entity, I id);
 
 	public int delete(User user, I id);
 
@@ -26,6 +32,8 @@ public interface IDao<E,I> {
 
 	public Long count(Condition filter);
 
-	public Class<E> getPersistentClass();
+	public Class<E> getEntityClass();
+
+	public Class<I> getIdClass();
 
 }

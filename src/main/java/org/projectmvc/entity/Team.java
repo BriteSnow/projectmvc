@@ -1,7 +1,7 @@
 package org.projectmvc.entity;
 
 
-public class Team extends BaseEntity<Long> {
+public class Team extends OrgScopedEntity<Long> {
 
     public enum Role{
         owner, admin, manager, contributor, observer;

@@ -14,12 +14,9 @@ public class WebExceptionCatchers {
 	@Inject
 	private JsonRenderer jsonRenderer;
 
-	@Inject
-	private WebResponseBuilder webResponseBuilder;
-
 	@WebExceptionCatcher
 	public void processAppException(AppException e, WebExceptionContext wec, RequestContext rc){
-		jsonRenderer.render(webResponseBuilder.fail(e),rc.getWriter());
+		jsonRenderer.render(WebResponse.fail(e),rc.getWriter());
 	}
 
 }

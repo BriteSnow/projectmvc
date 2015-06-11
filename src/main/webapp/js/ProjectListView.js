@@ -29,7 +29,12 @@
 				var newProject;
 				// press enter
 				if (key === 13){
-					newProject = {name: $input.val()};
+					// take orgId from 
+					var orgId = app.user.orgId;
+
+					newProject = {name: $input.val(),
+												orgId: app.user.orgId};
+
 					$input.val("");
 					app.projectDao.create(newProject).done(function(projectCreated){
 						window.location = "#project/" + projectCreated.id;

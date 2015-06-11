@@ -28,14 +28,10 @@ public class UserWebHandler {
 	@Inject
 	private IDao<Ticket,Long> ticketDao;
 
-	@Inject
-	private WebResponseBuilder webResponseBuilder;
-
-
     @WebGet("/das-list-user")
     public WebResponse listUser(@WebUser User user){
         List<User> users = userDao.list(user,null,0,100,"name");
-        return webResponseBuilder.success(users);
+        return WebResponse.success(users);
     }
 
 }

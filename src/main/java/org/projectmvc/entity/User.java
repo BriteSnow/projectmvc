@@ -1,22 +1,33 @@
 package org.projectmvc.entity;
 
 
-public class User extends BaseEntity<Long> {
+import org.projectmvc.access.UserAccessContext;
 
+public class User extends OrgScopedEntity<Long> {
+
+	//// persistent properties
 	private String username;
 	private String pwd;
 	private String firstName;
 	private String lastName;
 	private String photoUrl;
-	
+
 	// denote if it is an admin user
 	private Boolean admin = false;
-	
+
+	//// per request properties
+	private UserAccessContext userAccessContext;
+
 	public User(){};
 
 	public User(String username, String pwd){
 		setUsername(username);
 		setPwd(pwd);
+	}
+
+	public User(String userName, Long orgId){
+		setUsername(userName);
+		setOrgId(orgId);
 	}
 
 	public String getDisplayName(){
@@ -32,7 +43,15 @@ public class User extends BaseEntity<Long> {
 		}
 		return sb.toString();
 	}
-	
+
+	public UserAccessContext getUserAccessContext() {
+		return userAccessContext;
+	}
+
+	public void setUserAccessContext(UserAccessContext userAccessContext) {
+		this.userAccessContext = userAccessContext;
+	}
+
 	// --------- Persistent Properties --------- //
 	public String getUsername() {
 		return username;

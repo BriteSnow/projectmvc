@@ -1,19 +1,15 @@
 package org.projectmvc.web;
 
 import com.britesnow.snow.util.AnnotationMap;
-import com.britesnow.snow.util.JsonUtil;
 import com.britesnow.snow.web.RequestContext;
-import com.britesnow.snow.web.param.annotation.PathVar;
 import com.britesnow.snow.web.param.resolver.annotation.WebParamResolver;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import com.google.inject.Singleton;
-import org.projectmvc.web.annotation.EntityIdParam;
+import org.projectmvc.web.annotation.MaybeJson;
 import org.projectmvc.web.annotation.JsonParam;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import static com.britesnow.snow.util.MapUtil.mapIt;
@@ -49,50 +45,32 @@ public class AppParamResolvers {
 	}
 
 	/**
-	 * <p>This is a custom entityId resolver that will get the value from the param and build an
-	 * JaSql compatible Id Map. If the value is a direct value (not starting with '{') we will assume
-	 * it is a Long and assume the id property name is "id" otherwise, just parse the json and return the map.</p>
-	 * <p/>
-	 * <p>This simple dual type support  simplifies the REST api by making it simple to get entity with single Primary Key,
-	 * while still allowing getting entity that have multiple PKs. So, we can do REST API like
-	 * </p>
-	 * <code>
-	 * HTTP-GET: /get-Project?id=123<br />
-	 * HTTP-GET: /get-ProjectUser?id={project_id:123,user_id:24}
-	 * </code>
+	 * If the string start with a '{' it will assume it is a json and return a Map.
+	 *
+	 * In another other case, just return the raw string value.
+	 *
 	 *
 	 * @param annotationMap
 	 * @param paramType
 	 * @param rc
-	 * @return Return the Map with the name/value from the JSON or the id:Long if direct value. Return null if the value is not compatible.
+	 * @return Return the Map with the name/value from the JSON or the raw value.
 	 */
-	@WebParamResolver(annotatedWith = EntityIdParam.class)
-	public Map resolveEntityIdParam(AnnotationMap annotationMap, Class paramType, RequestContext rc) {
-		Map idMap = null;
-		EntityIdParam jsonParam = annotationMap.get(EntityIdParam.class);
+	@WebParamResolver(annotatedWith = MaybeJson.class)
+	public Object resolveEntityIdParam(AnnotationMap annotationMap, Class paramType, RequestContext rc) {
+		MaybeJson jsonParam = annotationMap.get(MaybeJson.class);
 		String paramName = jsonParam.value();
 		Object value = rc.getParam(paramName);
 
-		if (value != null) {
-			// if it is a json, we parse it.
+		if (value != null){
 			if (value instanceof String) {
-				String valueStr = (String) value;
-				if (valueStr.startsWith("{")) {
-					//idMap = JsonUtil.toMapAndList(valueStr);
-					idMap = parseJson(valueStr);
-				}
-			}
-			// if idMap is still null, we try to get the value from the param as a direct value.
-			// assume "id" as id property name and Long value
-			if (idMap == null) {
-				Long valueL = rc.getParamAs(paramName,Long.class);
-				if (valueL != null){
-					idMap = mapIt("id",valueL);
+				String str = (String)value;
+				if (str.startsWith("{")) {
+					value = parseJson(str);
 				}
 			}
 		}
 
-		return idMap;
+		return value;
 	}
 
 

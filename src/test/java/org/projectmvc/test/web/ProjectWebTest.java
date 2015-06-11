@@ -17,9 +17,6 @@ import java.util.Map;
 import static com.britesnow.snow.util.MapUtil.mapIt;
 import static org.junit.Assert.assertEquals;
 
-/**
- * Created by jeremychone on 3/9/14.
- */
 public class ProjectWebTest extends BaseTestSupport {
 
 	@Test
@@ -31,8 +28,8 @@ public class ProjectWebTest extends BaseTestSupport {
 		IDao<Project,Long> projectDao = daoRegistry.getDao(Project.class);
 		UserDao userDao = appInjector.getInstance(UserDao.class);
 
-		User user1 = userDao.createUser("test_demouser_1","welcome");
-		User user2 = userDao.createUser("test_demouser_2","welcome");
+		User user1 = userDao.createUser("test_demouser_1","welcome",123L);
+		User user2 = userDao.createUser("test_demouser_2","welcome",123L);
 
 		Map user1CookieMap = doPost("/login", mapIt("username", user1.getUsername(), "pwd", user1.getPwd())).getCookieMap();
 		Map user2CookieMap = doPost("/login", mapIt("username", user2.getUsername(), "pwd", user1.getPwd())).getCookieMap();
@@ -40,12 +37,12 @@ public class ProjectWebTest extends BaseTestSupport {
 		String projectJsonStr;
 		RequestContextMock rc;
 
-		projectJsonStr = JsonUtil.toJson(mapIt("name", "test_project_1_user1"));
+		projectJsonStr = JsonUtil.toJson(mapIt("name", "test_project_1_user1","orgId","123"));
 		rc = doPost("/das-create-project",mapIt("props",projectJsonStr), user1CookieMap);
-		projectJsonStr = JsonUtil.toJson(mapIt("name", "test_project_2_user1"));
+		projectJsonStr = JsonUtil.toJson(mapIt("name", "test_project_2_user1","orgId","123"));
 		rc = doPost("/das-create-project",mapIt("props",projectJsonStr), user1CookieMap);
 
-		projectJsonStr = JsonUtil.toJson(mapIt("name", "test_project_1_user2"));
+		projectJsonStr = JsonUtil.toJson(mapIt("name", "test_project_1_user2","orgId","123"));
 		rc = doPost("/das-create-project",mapIt("props",projectJsonStr), user2CookieMap);
 
 		rc = doGet("/das-list-project", null, user1CookieMap);

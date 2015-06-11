@@ -1,13 +1,19 @@
 package org.projectmvc.entity;
 
 
-public class Ticket extends BaseEntity<Long> {
+public class Ticket extends OrgScopedEntity<Long> {
 
     private Long projectId;
     private String title;
 
-    
-    public Long getProjectId() {
+    public Ticket(){}
+
+	public Ticket(String title, Long orgId) {
+		setTitle(title);
+		setOrgId(orgId);
+	}
+
+	public Long getProjectId() {
         return projectId;
     }
     public Ticket setProjectId(Long projectId) {

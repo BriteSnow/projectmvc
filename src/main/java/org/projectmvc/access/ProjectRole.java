@@ -10,7 +10,8 @@ public enum ProjectRole {
 	owner(ProjectPrivilege.values()),
 	developer(create_tickets),
 	lead_developer(create_tickets, update_others_tickets, resolve_others_tickets),
-	qa(create_tickets,update_others_tickets, resolve_others_tickets);
+	qa(create_tickets,update_others_tickets, resolve_others_tickets),
+	basic(view);
 
 	private ProjectPrivilege[] projectPrivileges;
 

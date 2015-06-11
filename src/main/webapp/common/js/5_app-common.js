@@ -41,3 +41,21 @@ var app = app || {};
 })();
 // --------- /AJAX Wrapper --------- //
 
+// --------- User get API --------- //
+// A simple API that get/refresh the user data and put it in app.user and trigger
+// a document "USER_REFRESHED"
+(function(){
+	app.user = null;
+
+	app.fetchUser = function(){
+		// get the authenticated user
+		app.doGet("/auth/get-user").done(function(user){
+			app.user = user;
+			$(document).trigger("USER_REFRESHED");
+			
+		});
+	};
+	
+})();
+// --------- /User get API --------- //
+

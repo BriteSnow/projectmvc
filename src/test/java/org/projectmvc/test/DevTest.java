@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.projectmvc.dao.*;
 import org.projectmvc.entity.*;
 
+import javax.inject.Inject;
 import java.lang.reflect.Type;
 import java.util.*;
 
@@ -19,8 +20,10 @@ import static org.junit.Assert.assertEquals;
  */
 public class DevTest extends BaseTestSupport {
 
+
 	@Test
-	public void emptyTest(){
+	public void emptyTest() {
+		System.out.println("emptyTest");
 	}
 
 
@@ -42,7 +45,7 @@ public class DevTest extends BaseTestSupport {
 		IDao<Project,Long> projectDao = daoRegistry.getDao(Project.class);
 		UserDao userDao = appInjector.getInstance(UserDao.class);
 
-		User user1 = userDao.createUser("test_demouser_1","welcome");
+		User user1 = userDao.createUser("test_demouser_1","welcome",123L);
 
 		Map user1CookieMap = doPost("/login", mapIt("username", user1.getUsername(), "pwd", user1.getPwd())).getCookieMap();
 

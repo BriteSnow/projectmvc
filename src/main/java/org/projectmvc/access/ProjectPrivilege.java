@@ -5,9 +5,10 @@ package org.projectmvc.access;
  */
 public enum ProjectPrivilege {
 	// This is the minimum privilege allow to view, comment, and assign labels to tickets.
-	basic,
+	view,
 	create_tickets,
 	update_others_tickets,
-	resolve_others_tickets, close_others_tickets,
+	resolve_others_tickets,
+	close_others_tickets,
 	manage_labels;
 }

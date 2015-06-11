@@ -68,9 +68,14 @@ public class DaoRegistry {
 		}
 	}
 
-	public IDao getDao(String entitySimpleClassName){
-		Class entityClass = entityClassByLowerCaseName.get(entitySimpleClassName.toLowerCase());
+	public IDao getDao(String entitySimpleClassName) {
+		Class entityClass = getEntityClass(entitySimpleClassName);
 		return getDao(entityClass);
+	}
+
+	public Class<? extends BaseEntity> getEntityClass(String entitySimpleClassName){
+		Class entityClass = entityClassByLowerCaseName.get(entitySimpleClassName.toLowerCase());
+		return entityClass;
 	}
 
 	public <E,I> IDao<E,I> getDao(Class<E> entityClass) {

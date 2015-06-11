@@ -1,5 +1,8 @@
 package org.projectmvc.dao;
 
+import com.britesnow.snow.web.hook.AppPhase;
+import com.britesnow.snow.web.hook.On;
+import com.britesnow.snow.web.hook.annotation.WebApplicationHook;
 import com.google.common.base.Throwables;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -7,6 +10,7 @@ import org.j8ql.DB;
 import org.j8ql.DBBuilder;
 import org.j8ql.Runner;
 import org.j8ql.query.*;
+import org.jomni.JomniMapper;
 import org.postgresql.ds.PGSimpleDataSource;
 
 import javax.inject.Inject;
@@ -41,8 +45,9 @@ import static org.j8ql.query.Query.*;
 @Singleton
 public class DaoHelper {
 
-    DB db;
-	HikariDataSource ds;
+    final DB db;
+	final HikariDataSource ds;
+	public final JomniMapper jomni;
 
 	MBeanServer beanServer;
 	ObjectName poolObjectName;
@@ -55,6 +60,7 @@ public class DaoHelper {
 					 @Named("db.pwd") String pwd,
 					 @Named("db.pool.maxsize") String maxPoolSizeStr) {
 
+		//System.out.println("DaoHelper ..... create pool START");
 		String poolName = "default";
 
 		int port = Integer.parseInt(portStr);
@@ -85,7 +91,10 @@ public class DaoHelper {
 		}
 
 		db = new DBBuilder().build(ds);
+		jomni = db.mapper;
+		//System.out.println("DaoHelper ..... create pool END");
 	}
+
 
 
 	public Map getPoolInfo(){
@@ -161,5 +170,10 @@ public class DaoHelper {
 		}
 	}
 
-
+	/**
+	 * WARNING: Call this only in application shutdown
+	 */
+	public void closeDataSource(){
+		ds.shutdown();
+	}
 }

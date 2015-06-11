@@ -1,5 +1,6 @@
 package org.projectmvc.web;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import com.britesnow.snow.web.RequestContext;
@@ -7,15 +8,20 @@ import com.britesnow.snow.web.WebRequestType;
 import com.britesnow.snow.web.auth.AuthRequest;
 import com.britesnow.snow.web.auth.AuthToken;
 import com.britesnow.snow.web.param.annotation.WebParam;
+import com.britesnow.snow.web.param.annotation.WebUser;
 import com.britesnow.snow.web.rest.annotation.WebGet;
 import com.britesnow.snow.web.rest.annotation.WebPost;
 import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
 import com.google.common.hash.Hashing;
-import com.google.inject.Inject;
 import org.projectmvc.AppException;
-import org.projectmvc.ErrorEnum;
+import org.projectmvc.ErrorType;
+import org.projectmvc.access.AccessManager;
+import org.projectmvc.access.OrgRole;
+import org.projectmvc.access.UserAccessContext;
+import org.projectmvc.dao.IDao;
 import org.projectmvc.dao.UserDao;
+import org.projectmvc.entity.Org;
 import org.projectmvc.entity.User;
 import org.projectmvc.service.PasswordService;
 
@@ -42,7 +48,7 @@ public class AppAuthService implements AuthRequest {
 	static private final String CN_UTOKEN = "utoken";
 	static private final String CN_USERNAME = "username";
 
-	public enum Error implements ErrorEnum{
+	public enum Error implements ErrorType {
 		NOT_LOGGEDIN("User not logged in."),
 		WRONG_CREDENTIAL("User name or password invalid."),
 		CANNOT_REGISTER_EMPTY_NAME("Username cannot be empty"),
@@ -63,10 +69,13 @@ public class AppAuthService implements AuthRequest {
 	private UserDao userDao;
 
 	@Inject
-	private WebResponseBuilder webResponseBuilder;
+	private IDao<Org,Long> orgDao;
 
 	@Inject
 	private PasswordService passwordService;
+
+	@Inject
+	private AccessManager accessManager;
 
 	// --------- AuthRequest Implementation --------- //
 	/**
@@ -98,6 +107,7 @@ public class AppAuthService implements AuthRequest {
 						String expectedUToken = buildUToken(user);
 						if (utoken.equals(expectedUToken)){
 							authToken = new AuthToken<User>(user);
+							accessManager.initUserAccessContext(user);
 						}
 					}
 					// if the authToken is still null
@@ -107,6 +117,7 @@ public class AppAuthService implements AuthRequest {
 						rc.removeCookie(CN_UTOKEN);
 					}
 				}
+			break;
 
 			// static files and generated files (.less, webbundle) we do not need to auth.
 			case GENERATED_ASSET:
@@ -119,7 +130,9 @@ public class AppAuthService implements AuthRequest {
 
 	// --------- Register & Login WebREST APIs --------- //
 	@WebPost("/register")
-	public WebResponse register(@WebParam("username") String username, @WebParam("pwd")String clearPwd, @WebParam("pwdRepeat")String pwdRepeat, RequestContext rc){
+	public WebResponse register(@WebParam("username") String username, @WebParam("pwd")String clearPwd,
+								@WebParam("pwdRepeat")String pwdRepeat,
+								RequestContext rc){
 		// we double check the password rules.
 		if (Strings.isNullOrEmpty(username)) {
 			throw new AppException(Error.CANNOT_REGISTER_EMPTY_NAME);
@@ -136,6 +149,8 @@ public class AppAuthService implements AuthRequest {
 
 		String encryptedPwd = passwordService.encrypt(clearPwd);
 
+		//// all new user have their own personal organization
+		// create the user (and its new personal org)
 		userDao.createUser(username,encryptedPwd);
 
 		return login(username,clearPwd,rc);
@@ -168,7 +183,7 @@ public class AppAuthService implements AuthRequest {
 		rc.setCookie(CN_USERNAME,username);
 		rc.setCookie(CN_UTOKEN,utoken);
 
-		return webResponseBuilder.success(user);
+		return WebResponse.success(user);
 	}
 
 	@WebGet("/logoff")
@@ -178,9 +193,18 @@ public class AppAuthService implements AuthRequest {
 		if (username != null || usertoken != null){
 			rc.removeCookie(CN_USERNAME);
 			rc.removeCookie(CN_UTOKEN);
-			return webResponseBuilder.success();
+			return WebResponse.success();
 		}else{
-			return webResponseBuilder.fail(new AppException(Error.NOT_LOGGEDIN));
+			return WebResponse.fail(new AppException(Error.NOT_LOGGEDIN));
+		}
+	}
+
+	@WebGet("/auth/get-user")
+	public WebResponse getUser(@WebUser User user) {
+		if (user != null) {
+			return WebResponse.success(user);
+		}else{
+			return WebResponse.fail("Request not authenticated");
 		}
 	}
 	// --------- /Register & Login WebREST APIs --------- //

@@ -1,10 +1,13 @@
 package org.projectmvc;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import javax.inject.Inject;
 
@@ -13,6 +16,12 @@ import com.google.inject.matcher.AbstractMatcher;
 import com.google.inject.matcher.Matcher;
 import com.google.inject.matcher.Matchers;
 import com.googlecode.gentyref.GenericTypeReflector;
+import org.jomni.JomniMapper;
+import org.projectmvc.access.DaoAccessInterceptor;
+import org.projectmvc.access.annotation.AssertParamOrgPrivileges;
+import org.projectmvc.access.annotation.AssertParamProjectPrivileges;
+import org.projectmvc.access.annotation.AssertReturnOrgPrivileges;
+import org.projectmvc.access.annotation.AssertReturnProjectPrivileges;
 import org.projectmvc.dao.BaseDao;
 import org.projectmvc.dao.DaoHelper;
 import org.projectmvc.dao.DaoRegistry;
@@ -28,12 +37,13 @@ import org.slf4j.LoggerFactory;
 import com.britesnow.snow.util.PackageScanner;
 import com.britesnow.snow.web.auth.AuthRequest;
 import com.britesnow.snow.web.binding.EntityClasses;
-import com.google.common.base.Predicate;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provider;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
+
+import static java.util.Arrays.asList;
 
 /**
  *	<p>This is the default Guice Module for the application. By best practice, we prefix application config/binding classes with "App",
@@ -41,29 +51,47 @@ import com.google.inject.TypeLiteral;
  *
  */
 public class AppConfig extends AbstractModule {
-	private static Logger log = LoggerFactory.getLogger(AppConfig.class);
-	
+	static private Logger log = LoggerFactory.getLogger(AppConfig.class);
+
+	static private final Class<? extends Annotation>[] assertPrivilegeAnnotations = new Class[]{AssertParamOrgPrivileges.class, AssertReturnOrgPrivileges.class,
+			AssertParamProjectPrivileges.class, AssertReturnProjectPrivileges.class};
+
 	// --------- For DaoRegistry --------- //
-	// TODO: needs to just check if class is abstract
-	// NOTE: (Class)cls cast below as a workaround to IntelliJ editor bug that does not yet recognized the method's generic. 
-	private static Class[] entityClasses = new PackageScanner(BaseEntity.class.getPackage().getName())
-															 .findClasses((cls) -> (cls != BaseEntity.class && BaseEntity.class.isAssignableFrom((Class) cls)));
+	static private Matcher entityClassMatcher = Matchers.subclassesOf(BaseEntity.class).and(Matchers.not(matchAbstractClass()));
+
+	static private Class[] entityClasses = new PackageScanner(BaseEntity.class.getPackage().getName())
+															 .findClasses((c) -> entityClassMatcher.matches(c));
 	// --------- /For DaoRegistry --------- //
 	
 	@Override
 	protected void configure() {
-		// bind the auth service implementation
+		// Bind the auth service implementation
+		// IMPORTANT: We are binding by instance and requesting injection, because if AppAuthService instance Inject a dynamic "IDao<...>"
+		// 			  object that are registered with requestInjection, the "bind(AuthRequest.class).to(AppAuthService.class)" would take precendence
+		//            and cause missing bindings.
+		// Note: If we were not using for example "IDao<Org,Long>" in AppAuthService and created a concrete "OrgDao" class, we would not
+		//       need to bind to the instance and request injection, we should just do "bind(AuthRequest.class).to(AppAuthService.class)"
 		bind(AuthRequest.class).to(AppAuthService.class);
 
 		// bind the jsonRender
 		bind(JsonRenderer.class).to(AppJsonRenderer.class);
 
-		// --------- For Performance Instrumatization --------- //
+		// --------- Performance Interceptor --------- //
 		// bind the perf interceptor
 		PerfInterceptor perfInterceptor = new PerfInterceptor();
 		requestInjection(perfInterceptor);
-		bindInterceptor(perfClassMatchers(), perfMethodMatchers() , perfInterceptor);
-		// --------- /For Performance Instrumatization --------- //
+		Matcher perfClassMatcher = Matchers.subclassesOf(BaseDao.class)
+				.or(Matchers.annotatedWith(ToMonitor.class)).or(matchAnyOf(DaoHelper.class));
+		bindInterceptor(perfClassMatcher, nonSyntheticMethodMatcher() , perfInterceptor);
+		// --------- /Performance Interceptor --------- //
+
+		// --------- Access Interceptor --------- //
+		DaoAccessInterceptor daoAccessInterceptor = new DaoAccessInterceptor();
+		requestInjection(daoAccessInterceptor);
+		Matcher accessClassMatcher = Matchers.subclassesOf(BaseDao.class);
+		Matcher accessMethodMatcher = annotatedWithAnyOf(assertPrivilegeAnnotations).and(nonSyntheticMethodMatcher());
+		bindInterceptor(accessClassMatcher,accessMethodMatcher, daoAccessInterceptor);
+		// --------- /Access Interceptor --------- //
 
 		// --------- For DaoRegistry --------- //
 		// Find and bind the dao for each Entity class (and create a genericDao instance if none defined).
@@ -77,11 +105,24 @@ public class AppConfig extends AbstractModule {
 		// --------- /For DaoRegistry --------- //
 	}
 
-	// --------- For Performance Instrumatization --------- //
-	private Matcher perfClassMatchers(){
-		Matcher m = Matchers.subclassesOf(BaseDao.class);
-		m = m.or(Matchers.annotatedWith(ToMonitor.class));
-		m = m.or(new ClassSetMatcher(DaoHelper.class));
+	/**
+	 * Return the Db JomniMapper for now.
+	 */
+	@Inject
+	@Provides
+	@Singleton
+	public JomniMapper providesJomniMapper(DaoHelper daoHelper){
+		return daoHelper.jomni;
+	}
+
+	// --------- For AOP Matching --------- //
+	static private Matcher annotatedWithAnyOf(Class<? extends Annotation>... annotationTypes){
+		Matcher m = Matchers.annotatedWith(annotationTypes[0]);
+		if (annotationTypes.length > 1){
+			for (Class<? extends Annotation> an : asList(annotationTypes).subList(1,annotationTypes.length)) {
+				m = m.or(Matchers.annotatedWith(an));
+			}
+		}
 		return m;
 	}
 
@@ -91,8 +132,9 @@ public class AppConfig extends AbstractModule {
 	 * This allows to avoid intercepting the Synthetic method.
 	 * @return
 	 */
-	private Matcher perfMethodMatchers(){
+	static private Matcher nonSyntheticMethodMatcher(){
 		Matcher m = new AbstractMatcher<Method>() {
+
 			@Override
 			public boolean matches(Method m) {
 				return !m.isSynthetic();
@@ -101,21 +143,27 @@ public class AppConfig extends AbstractModule {
 		return m;
 	}
 
-	class ClassSetMatcher extends AbstractMatcher<Class>{
-		Set<Class> classSet = new HashSet<Class>();
 
-		ClassSetMatcher(Class... classes){
-			for (Class cls : classes) {
-				classSet.add(cls);
+	static private Matcher matchAnyOf(Class... classes) {
+		Set<Class> classSet = new HashSet<>(asList(classes));
+		return matchClass(c -> classSet.contains(c));
+	}
+
+	static private Matcher matchAbstractClass(){
+		return matchClass(c -> Modifier.isAbstract(c.getModifiers()));
+	}
+
+
+	static private Matcher matchClass(Predicate<Class> predicate) {
+		return new AbstractMatcher<Class>() {
+			@Override
+			public boolean matches(Class c) {
+				return predicate.test(c);
 			}
-		}
+		};
+	}
+	// --------- /For AOP Matching --------- //
 
-		@Override
-		public boolean matches(Class c) {
-			return classSet.contains(c);
-		}
-	}	
-	// --------- /For Performance Instrumatization --------- //
 
 	// --------- For DaoRegistry --------- //
 	// Just return the static entityClasses value, allowing @EntityClasses to be injected.
@@ -129,7 +177,6 @@ public class AppConfig extends AbstractModule {
 	
 	private <T> void bindDao(final Class entityClass){
 		final Type idClass = GenericTypeReflector.getTypeParameter(entityClass, BaseEntity.class.getTypeParameters()[0]);
-
 		Type daoParamType = new ParameterizedType() {
 			public Type getRawType() {
 				return IDao.class;
@@ -145,8 +192,12 @@ public class AppConfig extends AbstractModule {
 		};        
 		
 		DaoProvider daoProvider = new DaoProvider(entityClass);
-		requestInjection(daoProvider);
-		bind(TypeLiteral.get(daoParamType)).toProvider((javax.inject.Provider)daoProvider);
+		try {
+			bind(TypeLiteral.get(daoParamType)).toProvider((javax.inject.Provider) daoProvider);
+		}catch (Throwable e){
+			e.printStackTrace();
+			throw new RuntimeException("AppConfig exception, cannot bind dao for " + entityClass + " daoProvider is null");
+		}
 	}
 	// --------- /For DaoRegistry --------- //
 	

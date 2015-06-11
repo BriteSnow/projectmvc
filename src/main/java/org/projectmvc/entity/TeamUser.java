@@ -7,31 +7,21 @@ public class TeamUser extends BaseEntity<TeamUser.Id>{
     private Team.Role role;
 
 
-	// --------- Composite ID --------- //
+	// --------- Entity Composite ID Accessors --------- //
 	public Long getTeamId() {
-		return (getId() == null)?null:getId().teamId;
+		return getOptionalId().map(Id::getTeamId).orElse(null);
     }
     public void setTeamId(Long teamId) {
-		getOrCreateId().teamId = teamId;
+		getOptionalId().orElseGet(() -> setIdAndReturnId(new Id())).setTeamId(teamId);
     }
 
     public Long getUserId() {
-		return (getId() == null)?null:getId().userId;
-    }
-    public void setUserId(Long userId) {
-		getOrCreateId().userId = userId;
-    }
-
-	private Id getOrCreateId(){
-		Id id = getId();
-		if (id == null){
-			id = new Id();
-			setId(id);
-		}
-		return id;
+		return getOptionalId().map(Id::getUserId).orElse(null);
 	}
-	// --------- /Composite ID --------- //
-
+	public void setUserId(Long userId) {
+		getOptionalId().orElseGet(() -> setIdAndReturnId(new Id())).setUserId(userId);
+    }
+	// --------- /Entity Composite ID Accessors --------- //
 
     public Team.Role getRole() {
         return role;
@@ -39,7 +29,6 @@ public class TeamUser extends BaseEntity<TeamUser.Id>{
     public void setRole(Team.Role role) {
         this.role = role;
     }
-    
 
 	public static class Id{
 		private Long teamId;

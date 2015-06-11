@@ -4,7 +4,6 @@ import com.britesnow.snow.web.rest.annotation.WebGet;
 import com.britesnow.snow.web.rest.annotation.WebPost;
 import org.projectmvc.dao.DaoHelper;
 import org.projectmvc.web.WebResponse;
-import org.projectmvc.web.WebResponseBuilder;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -15,8 +14,6 @@ import javax.inject.Singleton;
 @Singleton
 public class PerfWebRest {
 
-	@Inject
-	private WebResponseBuilder wrb;
 
 	@Inject
 	private PerfManager perfManager;
@@ -29,13 +26,13 @@ public class PerfWebRest {
 
 		AppPerf appPerf = perfManager.getAppPerf(daoHelper.getPoolInfo());
 
-		return wrb.success(appPerf);
+		return WebResponse.success(appPerf);
 	}
 
 	@WebPost("/perf-clear")
 	public WebResponse clearPerf(){
 		perfManager.clear();
-		return wrb.success(true);
+		return WebResponse.success(true);
 	}
 
 }

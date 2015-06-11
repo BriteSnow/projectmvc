@@ -3,9 +3,12 @@ package org.projectmvc.test.web;
 import com.britesnow.snow.testsupport.mock.RequestContextMock;
 import com.britesnow.snow.util.JsonUtil;
 import org.junit.Test;
+import org.projectmvc.access.AccessManager;
 import org.projectmvc.dao.DaoRegistry;
 import org.projectmvc.dao.IDao;
+import org.projectmvc.dao.UserDao;
 import org.projectmvc.entity.Project;
+import org.projectmvc.entity.User;
 import org.projectmvc.test.BaseTestSupport;
 
 import java.util.List;
@@ -25,18 +28,18 @@ public class BasicDasWebRestTest extends BaseTestSupport {
 
 	@Test
 	public void simpleProjectCreateWebRestTest(){
-		createTestUser1();
+
+		User user1 = createTestUser1();
+
+		Map authCookieMap = doPost("/login", testUser1UsernamePwd).getCookieMap();
 
 		String projectName = "test_project_single";
-
-		Map authCookieMap = doPost("/login",defaultTestUsernamePassword).getCookieMap();
-
-		String projectJsonStr = JsonUtil.toJson(mapIt("name", projectName));
+		String projectJsonStr = JsonUtil.toJson(mapIt("name", projectName,"orgId",user1.getOrgId()));
 		RequestContextMock rc = doPost("/das-create-project",mapIt("props",projectJsonStr), authCookieMap);
 
 		// get and check the result
 		Map result = rc.getResponseAsJson();
-
+		System.out.println(result);
 		assertEquals(projectName, getDeepValue(result, "result.name"));
 	}
 
@@ -48,26 +51,23 @@ public class BasicDasWebRestTest extends BaseTestSupport {
 		// create the project directly in the db using DAO
 		DaoRegistry daoRegistry = appInjector.getInstance(DaoRegistry.class);
 		IDao<Project, Long> projectDao = daoRegistry.getDao(Project.class);
+
+		User user = createTestUser1();
+
 		Project project = new Project();
 		String projectName = "test_project-001";
 		project.setName(projectName);
-		Long projectId = (Long) projectDao.create(null, project);
+		project.setOrgId(user.getOrgId());
+		Long projectId = (Long) projectDao.create(user, project);
 
-		Map result, params, projectMap;
+		Map jsonResponse;
 
-		// Test getting with a json id param
-		// get the first project via rest
-		params = mapIt("id", JsonUtil.toJson(mapIt("id", projectId)));
-		result = doGet("/das-get-project", params).getResponseAsJson();
-		projectMap = (Map) result.get("result");
-		assertEquals(projectId.intValue(), projectMap.get("id"));
-		assertEquals(projectName, projectMap.get("name"));
+		// Test to access the project, without a user (Should fail with DAO_METHOD_NO_USER)
+		jsonResponse = doGet("/das-get-project", mapIt("id","" + projectId)).getResponseAsJson();
+		assertEquals(false, jsonResponse.get("success"));
+		assertEquals("DAO_METHOD_NO_USER", jsonResponse.get("errorCode"));
 
-		// Test getting with a direct id value
-		result = doGet("/das-get-project", mapIt("id", "" + projectId)).getResponseAsJson();
-		projectMap = (Map) result.get("result");
-		assertEquals(projectId.intValue(), projectMap.get("id"));
-		assertEquals(projectName, projectMap.get("name"));
+		//assertEquals(projectName, projectMap.get("name"));
 	}
 
 
@@ -75,7 +75,7 @@ public class BasicDasWebRestTest extends BaseTestSupport {
 	//        works fine when running this unit test in IntelliJ ?
 	//@Test
 	public void projectsCrudWebRestTest(){
-		Map authCookieMap = doPost("/login",defaultTestUsernamePassword).getCookieMap();
+		Map authCookieMap = doPost("/login", testUser1UsernamePwd).getCookieMap();
 
 		// create 9 projects
 		for (int i = 0 ; i < 10 ; i++){

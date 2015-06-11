@@ -9,12 +9,14 @@ import com.google.inject.Singleton;
 import org.j8ql.query.Condition;
 import org.j8ql.query.FieldOpValue;
 import org.j8ql.query.Query;
+import org.jomni.JomniMapper;
 import org.projectmvc.AppException;
+import org.projectmvc.access.AccessManager;
 import org.projectmvc.dao.DaoRegistry;
 import org.projectmvc.dao.IDao;
 import org.projectmvc.entity.User;
 import org.projectmvc.perf.annotation.ToMonitor;
-import org.projectmvc.web.annotation.EntityIdParam;
+import org.projectmvc.web.annotation.MaybeJson;
 import org.projectmvc.web.annotation.JsonParam;
 
 import java.util.List;
@@ -40,7 +42,10 @@ public class GenericDasWebRest {
 	private DaoRegistry daoRegistry;
 
 	@Inject
-	private WebResponseBuilder webResponseBuilder;
+	private AccessManager accessManager;
+
+	@Inject
+	private JomniMapper jomni;
 
 	@WebPost("/das-create-{entity}")
 	public WebResponse createEntity(@WebUser User user, @PathVar("entity")String entityType, @JsonParam("props") Map props){
@@ -49,53 +54,63 @@ public class GenericDasWebRest {
 		// TODO: probably need to have a createWithReturn
 		Object id = dao.create(user,props);
 		Object entity = dao.get(user, id).orElse(null);
-		return webResponseBuilder.success(entity);
+		return WebResponse.success(entity);
 	}
 
 	@WebGet("/das-get-{entity}")
-	public WebResponse getEntity(@WebUser User user, @PathVar("entity")String entityType, @EntityIdParam("id") Map id){
+	public WebResponse getEntity(@WebUser User user, @PathVar("entity")String entityType, @MaybeJson("id") Object idObj){
 		IDao dao = daoRegistry.getDao(entityType);
+		Object id = getIdValue(dao.getIdClass(),idObj);
+
 		Object entity = dao.get(user, id).orElse(null);
 
-		return webResponseBuilder.success(entity);
+		return WebResponse.success(entity);
 	}
 
 	@WebGet("/das-list-{entity}")
 	public WebResponse listEntity(@WebUser User user, @PathVar("entity")String entityType, @JsonParam("filter") Map filter){
 		IDao dao = daoRegistry.getDao(entityType);
+
 		Condition conditions = null;
 		if (filter != null) {
 			// build the Field Operation and Value from the map, assuming it is "J8QL" map compatible (e.g. "projectId;=":123)
 			FieldOpValue[] fovs = Query.fovs(filter);
 			conditions = Query.and(fovs);
 		}
-		List<Object> list = dao.list(user,conditions,0,1000,"id");
+		List<Object> list = dao.list(user,conditions,0,1000);
 
-		return webResponseBuilder.success(list);
+		return WebResponse.success(list);
 	}
 
 
 
 	@WebPost("/das-update-{entity}")
-	public WebResponse updateEntity(@WebUser User user, @PathVar("entity")String entityType, @EntityIdParam("id") Map id, @JsonParam("props") Map props){
+	public WebResponse updateEntity(@WebUser User user, @PathVar("entity")String entityType, @MaybeJson("id") Object idObj, @JsonParam("props") Map props){
 		IDao dao = daoRegistry.getDao(entityType);
+		Object id = getIdValue(dao.getIdClass(),idObj);
+
 		int r = dao.update(user,props, id);
-		return webResponseBuilder.success(r);
+		return WebResponse.success(r);
 	}
 
 
 	@WebPost("/das-delete-{entity}")
-	public WebResponse deleteEntity(@WebUser User user, @PathVar("entity")String entityType, @EntityIdParam("id") Map idMap){
+	public WebResponse deleteEntity(@WebUser User user, @PathVar("entity")String entityType, @MaybeJson("id") Object idObj){
 		IDao dao = daoRegistry.getDao(entityType);
+		Object id = getIdValue(dao.getIdClass(),idObj);
 
-		int numDeleted = dao.delete(user, idMap);
+		int numDeleted = dao.delete(user, id);
 
 		if (numDeleted > 0){
-			return webResponseBuilder.success(idMap);
+			return WebResponse.success(id);
 		}else{
-			return webResponseBuilder.fail(new AppException("Cannot delete " + entityType + " with id " + idMap));
+			return WebResponse.fail(new AppException("Cannot delete " + entityType + " with id " + id));
 		}
+	}
 
+
+	private <I> I getIdValue(Class<I> idClass, Object idObj) {
+		return jomni.as(idClass, idObj);
 	}
 
 }

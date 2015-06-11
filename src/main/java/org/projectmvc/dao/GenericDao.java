@@ -10,6 +10,7 @@ public class GenericDao extends BaseDao {
 	GenericDao setEntityClass(Class entityClass, Class idClass) {
 		this.entityClass = entityClass;
 		this.idClass = idClass;
+		initBaseQueries();
 		return this;
 	}
 }

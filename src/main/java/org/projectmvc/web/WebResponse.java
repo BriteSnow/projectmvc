@@ -14,8 +14,31 @@ public class WebResponse {
 	private Map perf;
 	
 	
-	WebResponse(){
+	private WebResponse(boolean success){
+		this.success = success;
 	}
+
+	// --------- Factories --------- //
+	static public WebResponse success(){
+		return new WebResponse(true).setSuccess(true);
+	}
+
+	static public WebResponse success(Object result){
+		return new WebResponse(true).setResult(result);
+	}
+
+	static public WebResponse fail(){
+		return new WebResponse(false);
+	}
+
+	static public WebResponse fail(String message){
+		return fail(new AppException(message));
+	}
+
+	static public WebResponse fail(Throwable t){
+		return new WebResponse(false).setThrowable(t);
+	}
+	// --------- /Factories --------- //
 
 	// --------- Accessors --------- //
 	public Boolean getSuccess() {
