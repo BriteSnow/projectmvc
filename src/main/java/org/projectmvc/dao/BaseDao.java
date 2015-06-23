@@ -135,9 +135,13 @@ public  class BaseDao<E extends BaseEntity,I> implements IDao<E,I> {
 	 * @return
 	 */
 	protected I doCreate(User user, E newEntity, Set<Object> columns){
+		// here we populate the newEntity with the timestamp information, and
+		// this method also return the new list of columns if there was one
+		// with the timestamp properties added (so that they get saved
+		columns = populateTimestamp(user, newEntity, columns);
+
 		// note: must have the (Set<Object>) to point to the right .columns(Set) method
 		// TODO: J8QL should have not ambiguous type for .columns.
-		columns = populateTimestamp(user, newEntity, columns);
 		return daoHelper.execute(getBaseInsertQuery().value(newEntity).columns(columns));
 	}
 
@@ -162,6 +166,7 @@ public  class BaseDao<E extends BaseEntity,I> implements IDao<E,I> {
 	 * @return
 	 */
 	protected int doUpdate(User user, E entity, I id, Set<Object> columns){
+		// similar to doCreate
 		columns = populateTimestamp(user, entity, columns);
 		return daoHelper.execute(getBaseUpdateQuery().value(entity).columns(columns).whereId(id));
 	}
