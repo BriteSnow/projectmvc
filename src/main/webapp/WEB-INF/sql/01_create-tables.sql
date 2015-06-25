@@ -116,6 +116,12 @@ CREATE TABLE teamuser
 (
 	"teamId" bigint NOT NULL,
 	"userId" bigint NOT NULL,
+	
+	-- Timestamp data
+	"cid" bigInt,
+	"ctime" timestamp with time zone,
+	"mid" bigInt,
+	"mtime" timestamp with time zone,
 
 	CONSTRAINT teamuser_pkey PRIMARY KEY ("teamId","userId")
 );

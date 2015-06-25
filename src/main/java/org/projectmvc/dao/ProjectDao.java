@@ -39,8 +39,6 @@ public class ProjectDao extends BaseDao<Project, Long> {
 	}
 
 	// --------- Create --------- //
-
-
 	/**
 	 * TODO: need to add the @RequireProjectPrivileges
 	 * @param user
@@ -55,7 +53,7 @@ public class ProjectDao extends BaseDao<Project, Long> {
 
 	@Override
 	@AssertParamOrgPrivileges(OrgPrivilege.CREATE_PROJECT)
-	protected Long doCreate(User user, Project newEntity, Set<Object> columns) {
+	protected Long doCreate(User user, Project newEntity, Set<String> columns) {
 		Long projectId = super.doCreate(user, newEntity, columns);
 		createOwnerTeam(user,projectId);
 		return projectId;
@@ -78,7 +76,6 @@ public class ProjectDao extends BaseDao<Project, Long> {
 		}
 	}
 	// --------- /Create --------- //
-
 
 
 	@Override

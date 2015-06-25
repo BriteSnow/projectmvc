@@ -163,6 +163,11 @@ public class DaoHelper {
 	}
 	// --------- /SelectQuery --------- //
 
+	// --------- DB Proxy --------- //
+	public List<String> getValidColumns(BaseQuery baseQuery, Collection<String> columnNames) {
+		return db.getValidColumns(baseQuery, columnNames);
+	}
+	// --------- /DB Proxy --------- //
 
 	public int executeUpdate(String sql,Object... values) {
 		try (Runner runner = db.openRunner()){

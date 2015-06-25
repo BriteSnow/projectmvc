@@ -118,7 +118,7 @@ public  class BaseDao<E extends BaseEntity,I> implements IDao<E,I> {
 	@Override
 	public final I create(User user, Map map) {
 		E newEntity = jomni.as(entityClass, map);
-		return doCreate(user, newEntity, (Set<Object>) map.keySet());
+		return doCreate(user, newEntity, (Set<String>) map.keySet());
 	}
 
 	/**
@@ -134,15 +134,15 @@ public  class BaseDao<E extends BaseEntity,I> implements IDao<E,I> {
 	 * @param columns
 	 * @return
 	 */
-	protected I doCreate(User user, E newEntity, Set<Object> columns){
+	protected I doCreate(User user, E newEntity, Set<String> columns){
 		// here we populate the newEntity with the timestamp information, and
 		// this method also return the new list of columns if there was one
 		// with the timestamp properties added (so that they get saved
 		columns = populateTimestamp(user, newEntity, columns);
+		InsertQuery<I> insertQuery = getBaseInsertQuery().value(newEntity);
 
-		// note: must have the (Set<Object>) to point to the right .columns(Set) method
-		// TODO: J8QL should have not ambiguous type for .columns.
-		return daoHelper.execute(getBaseInsertQuery().value(newEntity).columns(columns));
+		List<String> validColumns = daoHelper.getValidColumns(insertQuery, columns);
+		return daoHelper.execute(insertQuery.columns((List<String>)validColumns));
 	}
 
 	@Override
@@ -153,7 +153,7 @@ public  class BaseDao<E extends BaseEntity,I> implements IDao<E,I> {
 	@Override
 	public final int update(User user, Map map, I id) {
 		E entity = jomni.as(entityClass, map);
-		return doUpdate(user, entity,id,(Set<Object>) map.keySet());
+		return doUpdate(user, entity,id,(Set<String>) map.keySet());
 	}
 
 	/**
@@ -165,10 +165,12 @@ public  class BaseDao<E extends BaseEntity,I> implements IDao<E,I> {
 	 * @param columns
 	 * @return
 	 */
-	protected int doUpdate(User user, E entity, I id, Set<Object> columns){
+	protected int doUpdate(User user, E entity, I id, Set<String> columns){
 		// similar to doCreate
 		columns = populateTimestamp(user, entity, columns);
-		return daoHelper.execute(getBaseUpdateQuery().value(entity).columns(columns).whereId(id));
+		UpdateQuery<Integer> updateQuery = getBaseUpdateQuery().value(entity).whereId(id);
+		List<String> validColumns = daoHelper.getValidColumns(updateQuery, columns);
+		return daoHelper.execute(updateQuery.columns((List<String>) validColumns));
 	}
 
 	@Override
@@ -208,7 +210,7 @@ public  class BaseDao<E extends BaseEntity,I> implements IDao<E,I> {
 	 * Note that the baseUpdateQuery excludes the cid, ctime anyway from the query, so,
 	 * we are fine to add them here.
 	 */
-	private Set<Object> populateTimestamp(User user, E entity, Set<Object> columns){
+	private Set<String> populateTimestamp(User user, E entity, Set<String> columns){
 		if (user != null){
 			Long userId = user.getId();
 			LocalDateTime now = LocalDateTime.now();
@@ -219,7 +221,7 @@ public  class BaseDao<E extends BaseEntity,I> implements IDao<E,I> {
 		}
 
 		if (columns != null) {
-			Set<Object> newColumns = new HashSet<>();
+			Set<String> newColumns = new HashSet<>();
 			newColumns.addAll(columns);
 			newColumns.add("cid");
 			newColumns.add("ctime");

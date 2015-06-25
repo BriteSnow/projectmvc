@@ -4,21 +4,20 @@ import org.junit.Test;
 import org.projectmvc.access.AccessManager;
 import org.projectmvc.dao.DaoRegistry;
 import org.projectmvc.dao.IDao;
+import org.projectmvc.dao.ProjectDao;
 import org.projectmvc.dao.UserDao;
 import org.projectmvc.entity.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiFunction;
 
 import static org.j8ql.query.Query.and;
+import static org.jomni.util.Maps.mapOf;
 import static org.junit.Assert.assertEquals;
 
 public class DaoTest extends BaseTestSupport {
 
-    @Test
-    public void emptyTest() {
-
-    }
 	@Test
 	public void simpleTicketCreateTest() {
 		DaoRegistry daoRegistry = appInjector.getInstance(DaoRegistry.class);
@@ -31,6 +30,18 @@ public class DaoTest extends BaseTestSupport {
 
 		Ticket ticketReloaded = ticketDao.get(null, ticketId).get();
 		assertEquals("test_DaoTest-simpleTicketCreateTest",ticketReloaded.getTitle());
+	}
+
+	@Test
+	public void createWithMapAndExtraProperty(){
+		ProjectDao projectDao = appInjector.getInstance(ProjectDao.class);
+		User user = createTestUser1();
+		Map projectMap = mapOf("name", "test_createWithMapAndExtraProperty", "orgId", user.getOrgId());
+		projectMap.put("foo", "extra property");
+
+		Long projectId = projectDao.create(user, projectMap);
+
+		assertEquals("test_createWithMapAndExtraProperty", projectDao.get(user, projectId).get().getName());
 	}
 
 	@Test
