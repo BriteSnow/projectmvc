@@ -36,6 +36,44 @@
 				<artifactId>maven-antrun-plugin</artifactId>
 				<version>1.4</version>
 				<executions>		 
+					<!-- create css folder -->
+					<execution>
+						<id>create-css-folder</id>
+						<phase>prepare-package</phase>  
+						<goals>  
+							<goal>run</goal>  
+						</goals>  
+						<configuration>
+								<failOnError>false</failOnError>
+						<tasks>
+							<mkdir dir="src/main/webapp/css"/>
+							<mkdir dir="src/main/webapp/common/css"/>
+							<mkdir dir="src/main/webapp/admin/css"/>
+						</tasks>
+						</configuration>
+					</execution>
+					<!-- /create css folder -->
+
+					<!-- clean css -->
+					<execution>
+						<id>clean-css</id>
+						<phase>prepare-package</phase>  
+						<goals>  
+							<goal>run</goal>  
+						</goals>  
+						<configuration>
+								<failOnError>false</failOnError>
+						<tasks>  
+							<delete includeemptydirs="true">
+								<fileset dir="src/main/webapp/css" includes="**/*.css" />
+								<fileset dir="src/main/webapp/common/css" includes="**/*.css" />
+								<fileset dir="src/main/webapp/admin/css" includes="*.css" />
+							</delete>
+						</tasks>  
+						</configuration>  
+					</execution>
+					<!-- /clean css -->
+
 					<!-- jCruncher -->
 					<execution>
 						<id>compile-html-assets</id>
