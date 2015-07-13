@@ -1,12 +1,10 @@
 package org.projectmvc.entity;
 
 
-import java.util.Date;
-
 public class Project extends OrgScopedEntity<Long> {
 
     private String name;
-    private String description;
+    private String desc;
     
     public Project(){
     }
@@ -16,9 +14,9 @@ public class Project extends OrgScopedEntity<Long> {
         setOrgId(orgId);
     }
 
-    public Project(String name, String description){
+    public Project(String name, String desc){
         this.name = name;
-        this.description = description;
+        this.desc = desc;
     }
 
     public String getName() {
@@ -29,11 +27,11 @@ public class Project extends OrgScopedEntity<Long> {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public String getDesc() {
+        return desc;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 }

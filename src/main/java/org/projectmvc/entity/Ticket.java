@@ -5,6 +5,7 @@ public class Ticket extends OrgScopedEntity<Long> {
 
     private Long projectId;
     private String title;
+    private String desc;
 
     public Ticket(){}
 
@@ -24,14 +25,15 @@ public class Ticket extends OrgScopedEntity<Long> {
     public String getTitle() {
         return title;
     }
-
     public Ticket setTitle(String title) {
         this.title = title;
 		return this;
     }
 
-
-    
-    
-    
+	public String getDesc() {
+		return desc;
+	}
+	public void setDesc(String desc) {
+		this.desc = desc;
+	}
 }

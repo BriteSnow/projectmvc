@@ -61,6 +61,7 @@ CREATE TABLE project
 	id bigserial NOT NULL,
 	"orgId" bigint NOT NULL,
 	name character varying(128),
+	"desc" text,
 	ticket_num_seq integer default 0,
 
 	-- Timestamp data
@@ -79,7 +80,7 @@ CREATE TABLE ticket
 	id bigserial NOT NULL,
 	"orgId" bigint NOT NULL,
 	title character varying(128),
-	description text,
+	"desc" text,
 	"projectId" bigint,
 
 	-- Timestamp data
