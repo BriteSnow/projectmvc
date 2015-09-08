@@ -28,13 +28,14 @@ From *projectmvc/* directory
 ```
 $ git clone git@github.com:BriteSnow/projectmvc.git projectmvc_mvnsrc
 ```
+
 *__BESTPRACTICE:__ The "_mvnsrc" suffix mean it is a maven src directory (typically checked in as it in git), and the parent folder is the project folder for other files such as design, data, output files)*
 
 3) Then, from the the *projectmvc_mvnsrc* 
 ```
 npm install
 ```
-*__Note:__ This will install all of the module in the "package.json" in this directory, enabling gulp to be called. 
+*__Note:__ This will install all of the modules in the "package.json" in this directory, enabling gulp to be called. 
 Important, when adding modules to the *gulpfile.js* make sure to do it with the ``` .... --save``` to make sure it gets added to the *package.json* (such as the next developer can just do a "node install" to install missing modules)**
 
 4) Create the database 
@@ -43,7 +44,7 @@ Now that node, gulp, and the node_modules are installed, we can run *gulp* to cr
 $ gulp recreateDb
 ```
 
-*__Note:__ If you look at the gulpfile code for the task, this will run a psql on postgres/postgres for the "00...sql" file (which will create the "pmvc_user" and "pmvc_db"), and then, run all of the subsequent sql files with the "pmvc_user" on "pmvc_db". This scheme will enable a simple way to do a incremental database update and keep production and development as close as possible.**
+*__Note:__ As we can see in the gulpfile.js file, the "recreateDb" task run a psql on postgres/postgres for the "00...sql" file (which will create the "pmvc_user" and "pmvc_db"), and then, run all of the subsequent sql files with the "pmvc_user" on "pmvc_db". This scheme will enable a simple way to do a incremental database update and keep production and development as close as possible.**
 
 5) Initial build
 
@@ -52,19 +53,18 @@ Now that the dev database is created, we can build the application
 $ mvn clean package
 ```
 
-
-
-5) From command line (from the pom.xml folder) build
-```
-mvn clean package
-```
-
 6) From same command line, run maven jetty
 ```
 mvn jetty:run
 ```
 
-7) Go to [http://localhost:8080/](http://localhost:8080/)
+7) When in development, automatically reprocess the web files when edit with 
+```
+gulp watch
+```
+
+
+8) Go to [http://localhost:8080/](http://localhost:8080/)
 
 ### Notes
 
