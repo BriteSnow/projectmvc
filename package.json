@@ -4,6 +4,8 @@
   "description": "ProjectMVC application (this is not and should not be a node module)",
   "main": "index.js",
   "dependencies": {
+    "del": "^2.0.1",
+    "fs": "0.0.2",
     "gulp": "^3.9.0",
     "gulp-concat": "^2.6.0",
     "gulp-less": "^3.0.3",
