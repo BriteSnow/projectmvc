@@ -5,32 +5,53 @@ The projectmvc-cloud project is a sample end-to-end application using modern and
 ### Pre-requisite
 
 1. Java 8
-2. Postgres 9.3+ in localhost port 5432 (default dev configuration in the /WEB-INF/snow.properties)
-3. /apps/jcruncherEx.jar (from http://jcruncher.org). Make sure to download the 0.9.4 or above. This is to compile the handlebars (3.0.1) and lesscss (1.7.5) as part of the maven built or interactivly during development with```java -jar /apps/jcruncherEx.jar -i```. (in later versions, the goal is to make jcruncher a maven plugin so that we do not have this extra harcoded step).
+2. maven
+3. Postgres 9.3+ in localhost port 5432 (default dev configuration in the /WEB-INF/snow.properties)
+4. node.js/npm/gulp, we are using maven to build, but we also call node.js from maven for all of the web files processing and other scripting needed (e.g., recreateDb from .sql file name conventions)
+    - once node/npm is install, make sure to install gulp globally to have access to the "gulp" command
+    ```$ npm install gulp -g``` 
+
+
+##### Being deprecated
+
+- /apps/jcruncherEx.jar (from http://jcruncher.org). We used to use jcruncher to compile handlebars and less, but now that we are integrating with node.js we are deprecating this way
+    - old note: Make sure to download the 0.9.4 or above. This is to compile the handlebars (3.0.1) and lesscss (1.7.5) as part of the maven built or interactivly during development with```java -jar /apps/jcruncherEx.jar -i```. (in later versions, the goal is to make jcruncher a maven plugin so that we do not have this extra harcoded step).
+
 
 ### Dev Setup
 
-1) Git clone this repository
 
-2) Login as *postgres* in your postgres db, and run the two lines in *src/main/webapp/WEB-INF/sql/00_create-db.sql*
-```
-psql -U postgres
-```
-In psql command line:
+1) Create a folder "projectmvc/" in your projects directory. 
 
-```sql
-CREATE USER pmvc_user PASSWORD 'welcome';
-CREATE DATABASE pmvc_db owner pmvc_user ENCODING = 'UTF-8';
+2) Clone maven source 
+From *projectmvc/* directory
+```
+$ git clone git@github.com:BriteSnow/projectmvc.git projectmvc_mvnsrc
+```
+*__BESTPRACTICE:__ The "_mvnsrc" suffix mean it is a maven src directory (typically checked in as it in git), and the parent folder is the project folder for other files such as design, data, output files)*
+
+3) Then, from the the *projectmvc_mvnsrc* 
+```
+npm install
+```
+*__Note:__ This will install all of the module in the "package.json" in this directory, enabling gulp to be called. 
+Important, when adding modules to the *gulpfile.js* make sure to do it with the ``` .... --save``` to make sure it gets added to the *package.json* (such as the next developer can just do a "node install" to install missing modules)**
+
+4) Create the database 
+Now that node, gulp, and the node_modules are installed, we can run *gulp* to create the database following the convention. 
+```
+$ gulp recreateDb
 ```
 
-3) Exit psql, login as *pmvc_user* to *pmvc_db* and copy paste the *src/main/webapp/WEB-INF/sql/01_create-tables.sql*
+*__Note:__ If you look at the gulpfile code for the task, this will run a psql on postgres/postgres for the "00...sql" file (which will create the "pmvc_user" and "pmvc_db"), and then, run all of the subsequent sql files with the "pmvc_user" on "pmvc_db". This scheme will enable a simple way to do a incremental database update and keep production and development as close as possible.**
+
+5) Initial build
+
+Now that the dev database is created, we can build the application
 ```
-psql -U pmvc_user pmvc_db
-\i src/main/webapp/WEB-INF/sql/01_create-tables.sql
+$ mvn clean package
 ```
 
-4) Download *jcrunderEx.jar* from http://jcruncher.org and put it in the */apps/* directory (on windows that would be C:/apps/)
-Note: we are working on making this a maven plugin to remove this manual step and harcoded pom.xml reference.  
 
 
 5) From command line (from the pom.xml folder) build
