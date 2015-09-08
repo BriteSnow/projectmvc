@@ -18,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 
 public class DaoTest extends BaseTestSupport {
 
-	@Test
+	//@Test
 	public void simpleTicketCreateTest() {
 		DaoRegistry daoRegistry = appInjector.getInstance(DaoRegistry.class);
 		IDao<Ticket,Long> ticketDao = daoRegistry.getDao(Ticket.class);
@@ -58,7 +58,7 @@ public class DaoTest extends BaseTestSupport {
 		assertEquals("test_devtest-simpleTest",teamReloaded.getName());
 	}
 
-	@Test
+	//@Test
 	public void simpleCreateAndList(){
 		DaoRegistry daoRegistry = appInjector.getInstance(DaoRegistry.class);
 		IDao<Ticket,Long> ticketDao = daoRegistry.getDao(Ticket.class);

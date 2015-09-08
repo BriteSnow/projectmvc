@@ -39,7 +39,7 @@ public class BasicDasWebRestTest extends BaseTestSupport {
 
 		// get and check the result
 		Map result = rc.getResponseAsJson();
-		System.out.println(result);
+		//System.out.println(result);
 		assertEquals(projectName, getDeepValue(result, "result.name"));
 	}
 

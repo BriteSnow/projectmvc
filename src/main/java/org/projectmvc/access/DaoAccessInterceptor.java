@@ -42,7 +42,7 @@ public class DaoAccessInterceptor implements MethodInterceptor {
 	public Object invoke(MethodInvocation invocation) throws Throwable {
 		Method method = invocation.getMethod();
 
-		System.out.printf("DaoAccessInterceptor - %s.%s \n", method.getDeclaringClass().getSimpleName(), invocation.getMethod().getName());
+		//System.out.printf("DaoAccessInterceptor - %s.%s \n", method.getDeclaringClass().getSimpleName(), invocation.getMethod().getName());
 
 		String methodName = method.getName();
 		String methodClassName = method.getDeclaringClass().getSimpleName();
@@ -57,7 +57,7 @@ public class DaoAccessInterceptor implements MethodInterceptor {
 			Long orgId = getOrgIdOrFail(entity, methodClassName, methodName);
 
 			for (OrgPrivilege privilege : assertParamOrgPrivileges.value()) {
-				System.out.printf("\tAssertParamOrgPrivileges on org %s - privileges: %s \n", orgId, privilege);
+				//System.out.printf("\tAssertParamOrgPrivileges on org %s - privileges: %s \n", orgId, privilege);
 				accessManager.assertOrgPrivilege(user.getUserAccessContext(), orgId, privilege);
 			}
 		}
@@ -74,7 +74,7 @@ public class DaoAccessInterceptor implements MethodInterceptor {
 				Long orgId = getOrgIdOrFail(entity, methodClassName, methodName);
 
 				for (OrgPrivilege privilege : assertReturnOrgPrivileges.value()) {
-					System.out.printf("\tassertReturnOrgPrivileges on org %s - privileges: %s \n", orgId, privilege);
+					//System.out.printf("\tassertReturnOrgPrivileges on org %s - privileges: %s \n", orgId, privilege);
 					accessManager.assertOrgPrivilege(user.getUserAccessContext(), orgId, privilege);
 				}
 			}
@@ -90,7 +90,7 @@ public class DaoAccessInterceptor implements MethodInterceptor {
 					Project project = (Project) entity;
 					Long projectId = ((Project) entity).getId();
 					for (ProjectPrivilege privilege : assertReturnProjectPrivileges.value()) {
-						System.out.printf("\tassertReturnProjectPrivileges on project %s - privileges: %s \n", project.getId(), privilege);
+						//System.out.printf("\tassertReturnProjectPrivileges on project %s - privileges: %s \n", project.getId(), privilege);
 						accessManager.assertProjectPrivilege(user.getUserAccessContext(), project, privilege);
 					}
 				}

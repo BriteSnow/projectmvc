@@ -57,7 +57,7 @@ public class DaoAccessTest extends BaseTestSupport {
 		projectJsonStr = JsonUtil.toJson(mapIt("name", "test_testOrgAccess_project-2", "orgId", "" + otherOrgId));
 		rc = doPost("/das-create-project",mapIt("props",projectJsonStr,"orgId", "" + otherOrgId), user1CookieMap);
 		responseAsJson = rc.getResponseAsJson();
-		System.out.println(responseAsJson);
+		//System.out.println(responseAsJson);
 		assertEquals(false,responseAsJson.get("success"));
 		assertEquals("FAILED_ORG_ACCESS",responseAsJson.get("errorCode"));
 		// --------- /User1 try to create new Project in other org (should fail) --------- //
