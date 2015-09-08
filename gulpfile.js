@@ -54,13 +54,13 @@ gulp.task('hbs-admin', function() {
     gulp.src(path.join(webappDir,"/admin/tmpl/",'*.tmpl'))
         .pipe(hbsPrecompile())
         .pipe(concat("templates.js"))
-        .pipe(gulp.dest(cssDir));
+        .pipe(gulp.dest(path.join(webappDir,"/admin/js/")));
 });
 
 gulp.task('less', function() {
     gulp.src(path.join(webappDir,"/less/",'*.less'))
         .pipe(less())
-        .pipe(gulp.dest(path.join(webappDir,"/css/")));
+        .pipe(gulp.dest(cssDir));
 });
 
 gulp.task('less-admin', function() {
