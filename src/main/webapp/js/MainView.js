@@ -21,6 +21,14 @@
 			app.fetchUser();
 		}, 
 
+		events: { 
+			"click; .do-logoff": function(){
+				app.doGet("/logoff").done(function(){
+					window.location.reload();
+				});
+			}
+		}, 
+
 		docEvents: {
 			"USER_REFRESHED": function(event){
 				var view = this;

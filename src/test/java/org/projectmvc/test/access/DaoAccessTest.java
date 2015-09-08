@@ -75,8 +75,6 @@ public class DaoAccessTest extends BaseTestSupport {
 		User user1 = userDao.createUser("test_testOrgAccess_user-1","welcome");
 		User user2 = userDao.createUser("test_testOrgAccess_user-2","welcome");
 
-
-
 		// login with the user
 		String projectJsonStr;
 		RequestContextMock rc;
