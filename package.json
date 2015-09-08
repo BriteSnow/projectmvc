@@ -1,0 +1,19 @@
+{
+  "name": "projectmvc",
+  "version": "1.0.0",
+  "description": "ProjectMVC application (this is not and should not be a node module)",
+  "main": "index.js",
+  "dependencies": {
+    "gulp": "^3.9.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-less": "^3.0.3",
+    "hbsp": "git+https://git@github.com/BriteSnow/node-hbsp.git",
+    "path": "^0.11.14",
+    "vdev": "git+https://git@github.com/BriteSnow/node-vdev.git"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": ""
+}

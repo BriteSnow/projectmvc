@@ -6,6 +6,9 @@
 .project
 .settings
 
+# ignore node_modules
+node_modules/
+
 # since we use Maven, ant buil.xml will be private for each developers
 #  (if they need their own scripts to do some stuff)
 build.xml
