@@ -63,6 +63,8 @@ public class AppConfig extends AbstractModule {
 															 .findClasses((c) -> entityClassMatcher.matches(c));
 	// --------- /For DaoRegistry --------- //
 	
+	static public final String appVersion = "DROP-001";
+
 	@Override
 	protected void configure() {
 		// Bind the auth service implementation
