@@ -33,87 +33,24 @@
 			</plugin>			
 
 			<plugin>
-					<groupId>com.github.eirslett</groupId>
-					<artifactId>frontend-maven-plugin</artifactId>
-					<version>0.0.23</version>
-					<executions>
-						<execution>
-								<id>gulp build</id>
-								<goals>
-										<goal>gulp</goal>
-								</goals>
-
-								<!-- optional: the default phase is "generate-resources" -->
-								<phase>generate-resources</phase>
-
-								<configuration>
-										<!-- The gulp default will do a clean and compile all of the less and hbs -->
-										<arguments>default</arguments>
-								</configuration>
-						</execution>			
-					</executions>
-
-			</plugin>
-
-			<plugin>
 				<artifactId>maven-antrun-plugin</artifactId>
 				<version>1.4</version>
 				<executions>		 
-					<!-- create css folder -->
-<!-- 					<execution>
-						<id>create-css-folder</id>
-						<phase>prepare-package</phase>  
-						<goals>  
-							<goal>run</goal>  
-						</goals>  
-						<configuration>
-							<failOnError>false</failOnError>
-							<tasks>
-								<mkdir dir="src/main/webapp/css"/>
-								<mkdir dir="src/main/webapp/common/css"/>
-								<mkdir dir="src/main/webapp/admin/css"/>
-							</tasks>
-						</configuration>
-					</execution>
- -->					<!-- /create css folder -->
 
-					<!-- clean css -->
-<!-- 					<execution>
-						<id>clean-css</id>
-						<phase>prepare-package</phase>  
-						<goals>  
-							<goal>run</goal>  
-						</goals>  
-						<configuration>
-							<failOnError>false</failOnError>
-							<tasks>  
-								<delete includeemptydirs="true">
-									<fileset dir="src/main/webapp/css" includes="**/*.css" />
-									<fileset dir="src/main/webapp/common/css" includes="**/*.css" />
-									<fileset dir="src/main/webapp/admin/css" includes="*.css" />
-								</delete>
-							</tasks>  
-						</configuration>  
-					</execution>
- -->					<!-- /clean css -->
-
-					<!-- jCruncher -->
-<!-- 					<execution>
-						<id>compile-html-assets</id>
-						<phase>prepare-package</phase>  
+					<execution>
+						<id>node-compile-html-assets!!!!!!!!!!!!!!!!!!</id>
+						<phase>generate-resources</phase>  
 						<goals>  
 							<goal>run</goal>
 						</goals>  
 						<configuration>
 							<tasks>
-								<exec executable="java">
-									<arg line="-jar"/>
-									<arg line="/apps/jcruncherEx.jar"/>
+								<exec executable="gulp">
+									<arg line="default"/>
 								</exec> 
 							</tasks>
 						</configuration>
-					</execution> -->
-					<!-- /jCruncher -->
+					</execution> 
 					
 					<!-- Copy to War -->
 					<execution>
