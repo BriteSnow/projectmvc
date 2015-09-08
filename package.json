@@ -2,16 +2,16 @@
   "name": "projectmvc",
   "version": "1.0.0",
   "description": "ProjectMVC application (this is not and should not be a node module)",
-  "main": "index.js",
+  "main": "gulpfile.js",
   "dependencies": {
     "del": "^2.0.1",
     "fs": "0.0.2",
     "gulp": "^3.9.0",
     "gulp-concat": "^2.6.0",
     "gulp-less": "^3.0.3",
-    "hbsp": "git+https://git@github.com/BriteSnow/node-hbsp.git",
+    "hbsp": "^0.1.0",
     "path": "^0.11.14",
-    "vdev": "git+https://git@github.com/BriteSnow/node-vdev.git"
+    "vdev": "^0.1.0"
   },
   "devDependencies": {},
   "scripts": {
