@@ -63,7 +63,7 @@ public class AppConfig extends AbstractModule {
 															 .findClasses((c) -> entityClassMatcher.matches(c));
 	// --------- /For DaoRegistry --------- //
 	
-	static public final String appVersion = "DROP-001";
+	static public final String appVersion = "DROP-002-SNAPSHOT";
 
 	@Override
 	protected void configure() {

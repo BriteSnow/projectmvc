@@ -32,13 +32,15 @@ gulp.task('watch', ['default'], function(){
 gulp.task('clean', function(){
 	var dirs = [cssDir, adminCssDir];
 
-	// make sure the directories exists (they might not in fresh clone)
+	
 	var dir;
 	for (var i = 0; i < dirs.length ; i ++){
 		dir = dirs[i];
-		if (!fs.existsSync(cssDir)) {
+        // make sure the directories exists (they might not in fresh clone)
+		if (!fs.existsSync(dir)) {
 			fs.mkdir(dir);
 		}
+        // delete the .css files (this makes sure we do not )
 		del.sync(dir + "*.css");
 	}
 });
