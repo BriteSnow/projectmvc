@@ -37,8 +37,9 @@
 				<version>1.4</version>
 				<executions>		 
 
+					<!-- gulp default to process tmpl & less files -->
 					<execution>
-						<id>node-compile-html-assets!!!!!!!!!!!!!!!!!!</id>
+						<id>node-gulp-default</id>
 						<phase>generate-resources</phase>  
 						<goals>  
 							<goal>run</goal>
@@ -51,7 +52,8 @@
 							</tasks>
 						</configuration>
 					</execution> 
-					
+					<!-- /gulp default to process tmpl & less files -->					
+
 					<!-- Copy to War -->
 					<execution>
 						<id>copy-to-war</id>
