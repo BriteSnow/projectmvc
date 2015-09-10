@@ -12,7 +12,7 @@ The projectmvc-cloud project is a sample end-to-end application using modern and
 
 4. Install node.js/npm ([node.js install/download](https://nodejs.org/en/download/))
     - On mac, you can [intall node with brew](http://blog.teamtreehouse.com/install-node-js-npm-mac)
-    - __IMPORTANT:__ Make sure you do not have a folder ```~/node_modules/``` otherwise local package will be installed there which is not what we want. If you have such folder, delete it (then, local modules will be install per project folder).
+    - __IMPORTANT:__ Make sure you do not have a folder ```~/node_modules/``` otherwise local packages will be installed there which is not what we want. If you have such folder, delete it (then, local modules will be install per project folder).
 
 5. Upgrade npm with: 
 
@@ -21,7 +21,7 @@ The projectmvc-cloud project is a sample end-to-end application using modern and
     sudo npm install npm -g
     ```
 
-6. Upgrade node with: 
+6. Upgrade node with (this way might not work on windows, google the correct way to update node to the latest): 
 
     ```
     # Clear NPM's cache:
@@ -42,6 +42,17 @@ The projectmvc-cloud project is a sample end-to-end application using modern and
 
     - _We are using maven to build, but we also call node.js from maven for all of the web files processing and other scripting needed (e.g., recreateDb from .sql file name conventions)_
 
+8. Check node and npm version 
+
+    ```
+    npm -v
+    ```
+    Should be above 2.14.1
+    ```
+
+    node -v
+    ```
+    Should be above v0.12.7
 
 ##### Being deprecated
 
