@@ -44,14 +44,17 @@ The projectmvc-cloud project is a sample end-to-end application using modern and
 
 8. Check node and npm version 
 
+
     ```
     npm -v
     ```
-    Should be above 2.14.1
-    ```
 
+    Should be above 2.14.1
+
+    ```    
     node -v
     ```
+    
     Should be above v0.12.7
 
 ##### Being deprecated
