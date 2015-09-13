@@ -16,15 +16,15 @@ var sqlDir = "src/main/webapp/WEB-INF/sql/";
 var cssDir = path.join(webappDir,"/css/");
 var adminCssDir = path.join(webappDir,"/admin/css/");
 
-gulp.task('default',['clean','hbs','hbs-admin','less','less-admin']);
+gulp.task('default',['clean','tmpl-_base','tmpl-admin','less-_base','less-admin']);
 
 // --------- Web Assets Processing --------- //
 gulp.task('watch', ['default'], function(){
 
-	gulp.watch(path.join(webappDir,"/tmpl/",'*.tmpl'), ['hbs']);
-	gulp.watch(path.join(webappDir,"/admin/tmpl/",'*.tmpl'), ['hbs-admin']);
+	gulp.watch(path.join(webappDir,"/tmpl/",'*.tmpl'), ['tmpl-_base']);
+	gulp.watch(path.join(webappDir,"/admin/tmpl/",'*.tmpl'), ['tmpl-admin']);
 
-	gulp.watch(path.join(webappDir,"/less/",'*.less'), ['less']);
+	gulp.watch(path.join(webappDir,"/less/",'*.less'), ['less-_base']);
 	gulp.watch(path.join(webappDir,"/admin/less/",'*.less'), ['less-admin']);
 	
 });
@@ -45,21 +45,21 @@ gulp.task('clean', function(){
 	}
 });
 
-gulp.task('hbs', function() {
+gulp.task('tmpl-_base', function() {
     gulp.src(path.join(webappDir,"/tmpl/",'*.tmpl'))
         .pipe(hbsPrecompile())
         .pipe(concat("templates.js"))
         .pipe(gulp.dest(path.join(webappDir,"/js/")));
 });
 
-gulp.task('hbs-admin', function() {
+gulp.task('tmpl-admin', function() {
     gulp.src(path.join(webappDir,"/admin/tmpl/",'*.tmpl'))
         .pipe(hbsPrecompile())
         .pipe(concat("templates.js"))
         .pipe(gulp.dest(path.join(webappDir,"/admin/js/")));
 });
 
-gulp.task('less', function() {
+gulp.task('less-_base', function() {
     gulp.src(path.join(webappDir,"/less/",'*.less'))
         .pipe(less())
         .pipe(gulp.dest(cssDir));
