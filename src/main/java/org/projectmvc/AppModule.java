@@ -47,11 +47,11 @@ import static java.util.Arrays.asList;
 
 /**
  *	<p>This is the default Guice Module for the application. By best practice, we prefix application config/binding classes with "App",
- *	such as <em>AppConfig</em> or <em>AppAuthService</em> which is bound to the snow <em>AuthService</em> interface.</p>
+ *	such as <em>AppModule</em> or <em>AppAuthService</em> which is bound to the snow <em>AuthService</em> interface.</p>
  *
  */
-public class AppConfig extends AbstractModule {
-	static private Logger log = LoggerFactory.getLogger(AppConfig.class);
+public class AppModule extends AbstractModule {
+	static private Logger log = LoggerFactory.getLogger(AppModule.class);
 
 	static private final Class<? extends Annotation>[] assertPrivilegeAnnotations = new Class[]{AssertParamOrgPrivileges.class, AssertReturnOrgPrivileges.class,
 			AssertParamProjectPrivileges.class, AssertReturnProjectPrivileges.class};
