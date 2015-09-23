@@ -24,6 +24,8 @@ dev/
 templates.js
 *.css
 !src/main/webapp/bootstrap/css/*
+
+
 # remove intellij stuff
 *.iml
 .idea/

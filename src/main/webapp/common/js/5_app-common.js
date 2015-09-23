@@ -27,7 +27,7 @@ var app = app || {};
 			if (response.success){
 				dfd.resolve(response.result);
 			}else{
-				dfd.reject(response.result);
+				dfd.reject(response);
 			}
 		});
 

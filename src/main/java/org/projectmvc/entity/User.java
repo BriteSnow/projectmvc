@@ -52,6 +52,23 @@ public class User extends OrgScopedEntity<Long> {
 		this.userAccessContext = userAccessContext;
 	}
 
+	/**
+	 * Currently, the pattern is that any user added to the org = 1 will be sysadmin.
+	 *
+	 * This pattern enable the following:
+	 *
+	 * 	- Avoid to have uncessary flags on user or org entities that 99.99999% of the case will be false.
+	 * 	- Allow to have multiple sysadmin accounts (and eventually have different privileges for them)
+	 * 	- Still safe, as the org = 1 should be created a database initial seed.
+	 */
+	public boolean isSysAdmin(){
+		if (getOrgId() != null && getOrgId() == 1){
+			return true;
+		}
+		return false;
+	}
+
+
 	// --------- Persistent Properties --------- //
 	public String getUsername() {
 		return username;
@@ -90,16 +107,6 @@ public class User extends OrgScopedEntity<Long> {
 	public void setPhotoUrl(String photoUrl) {
 		this.photoUrl = photoUrl;
 	}
-
-	public Boolean getAdmin() {
-		return admin;
-	}
-
-	public void setAdmin(Boolean admin) {
-		this.admin = admin;
-	}
-	
-	
 	// --------- /Persistent Properties --------- //
 	
 	

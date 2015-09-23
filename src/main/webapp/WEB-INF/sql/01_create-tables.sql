@@ -8,6 +8,8 @@ CREATE TABLE org
 	name character varying(128),
 	personal boolean default 'f' NOT NULL,
 
+	sys boolean default 'f' NOT null,
+
 	-- Timestamp data
 	"cid" bigInt,
 	"ctime" timestamp with time zone,

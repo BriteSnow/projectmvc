@@ -168,14 +168,11 @@
 		<div class="panel-body">
 			<div class="form">
 				<div class="form-group">
-					<input id="input-username" name="username" type="text" class="form-control"  autofocus placeholder="Email Address">
+					<input id="input-username" name="username" type="text" class="form-control dx"  autofocus placeholder="Email Address">
 				</div>
 				<div class="form-group">
-					<input id="input-pwd" name="pwd" type="password" class="form-control" placeholder="Password">
-				</div>		
-				<div class="form-group show-for-register">
-					<input id="input-pwd-repeat" type="password" name="pwdRepeat" class="form-control" placeholder="Repeat Password">
-				</div>		
+					<input id="input-pwd" name="pwd" type="password" class="form-control dx" placeholder="Password">
+				</div>				
 				<button id="submit-button" type="submit" name="SIGNIN" class="btn btn-primary login-label">Sign In</button>
 			</div>
 		</div> <!-- /.panel-body -->

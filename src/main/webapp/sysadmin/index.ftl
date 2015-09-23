@@ -8,14 +8,27 @@
 
 	[@webBundle path="/common/js/" type="js" /]
 
-	[@webBundle path="/admin/js/" type="js" /]
-	[@webBundle path="/admin/css/" type="css" /]
-	
+	<script type='text/javascript' src='/bootstrap/js/bootstrap.min.js'></script>
+
+	[@webBundle path="/sysadmin/js/" type="js" /]
+	[@webBundle path="/sysadmin/css/" type="css" /]
+
+	[#if _r.user??]
 	<script type="text/javascript">
 	$(function(){
+		
 		brite.display("AdminView","body");
 	});
 	</script>
+	[#else]
+	<script type="text/javascript">	
+	$(function(){		
+		brite.display("AdminLogin","body");
+	});
+	</script>	
+	[/#if]
+
+
 </head>
 
 <body>

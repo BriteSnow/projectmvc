@@ -14,23 +14,23 @@ var webappDir = "src/main/webapp/";
 var sqlDir = "src/main/webapp/WEB-INF/sql/";
 
 var cssDir = path.join(webappDir,"/css/");
-var adminCssDir = path.join(webappDir,"/admin/css/");
+var sysadminCssDir = path.join(webappDir,"/sysadmin/css/");
 
-gulp.task('default',['clean','tmpl-_base','tmpl-admin','less-_base','less-admin']);
+gulp.task('default',['clean','tmpl-_base','tmpl-sysadmin','less-_base','less-sysadmin']);
 
 // --------- Web Assets Processing --------- //
 gulp.task('watch', ['default'], function(){
 
 	gulp.watch(path.join(webappDir,"/tmpl/",'*.tmpl'), ['tmpl-_base']);
-	gulp.watch(path.join(webappDir,"/admin/tmpl/",'*.tmpl'), ['tmpl-admin']);
+	gulp.watch(path.join(webappDir,"/sysadmin/tmpl/",'*.tmpl'), ['tmpl-sysadmin']);
 
 	gulp.watch(path.join(webappDir,"/less/",'*.less'), ['less-_base']);
-	gulp.watch(path.join(webappDir,"/admin/less/",'*.less'), ['less-admin']);
+	gulp.watch(path.join(webappDir,"/sysadmin/less/",'*.less'), ['less-sysadmin']);
 	
 });
 
 gulp.task('clean', function(){
-	var dirs = [cssDir, adminCssDir];
+	var dirs = [cssDir, sysadminCssDir];
 
 	
 	var dir;
@@ -52,11 +52,11 @@ gulp.task('tmpl-_base', function() {
         .pipe(gulp.dest(path.join(webappDir,"/js/")));
 });
 
-gulp.task('tmpl-admin', function() {
-    gulp.src(path.join(webappDir,"/admin/tmpl/",'*.tmpl'))
+gulp.task('tmpl-sysadmin', function() {
+    gulp.src(path.join(webappDir,"/sysadmin/tmpl/",'*.tmpl'))
         .pipe(hbsPrecompile())
         .pipe(concat("templates.js"))
-        .pipe(gulp.dest(path.join(webappDir,"/admin/js/")));
+        .pipe(gulp.dest(path.join(webappDir,"/sysadmin/js/")));
 });
 
 gulp.task('less-_base', function() {
@@ -65,10 +65,10 @@ gulp.task('less-_base', function() {
         .pipe(gulp.dest(cssDir));
 });
 
-gulp.task('less-admin', function() {
-    gulp.src(path.join(webappDir,"/admin/less/",'*.less'))
+gulp.task('less-sysadmin', function() {
+    gulp.src(path.join(webappDir,"/sysadmin/less/",'*.less'))
         .pipe(less())
-        .pipe(gulp.dest(adminCssDir));
+        .pipe(gulp.dest(sysadminCssDir));
 });
 // --------- /Web Assets Processing --------- //
 

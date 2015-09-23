@@ -1,5 +1,5 @@
 [#-- If admin, we bypass the _frame.ftl and load directly the targeted template --]
-[#if piStarts("/admin")]
+[#if piStarts("/sysadmin")]
 [@includeFrameContent /]
 [#-- if we have a user in the request, we display the application --]
 [#elseif _r.user??]
