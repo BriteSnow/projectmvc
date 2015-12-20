@@ -1,4 +1,4 @@
-@import "utils";
+@import "utils.pcss";
 
 .ProjectSettings{
 
@@ -14,7 +14,7 @@
 		}
 
 		ul{
-			.clearfix;
+			@mixin clearfix;
 		}	
 
 		ul > li{
@@ -30,7 +30,7 @@
 		.add-member-ctn{
 
 			.add-member{
-				color: @text-action-link;
+				color: $text-action-link;
 				cursor: pointer;
 			}
 			input{

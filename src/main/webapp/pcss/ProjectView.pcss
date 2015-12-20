@@ -1,7 +1,7 @@
-@import "utils.less";
+@import "utils.pcss";
 
 .ProjectView{
-	.fitparent();
+	@mixin fitparent;
 	padding: 20px;
 	bottom: 10px;
 	
@@ -13,12 +13,12 @@
 	}
 
 	.ProjectView-content{
-		.fitparent();
+		@mixin fitparent;
 		top: 60px;
 		margin: 0 20px;
 
 		.tab-ctn{
-			.fitparent();
+			@mixin fitparent;
 			top: 50px;
 		}
 

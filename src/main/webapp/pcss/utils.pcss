@@ -1,19 +1,18 @@
 /* --------- Variables --------- */
-@text-action-link: #2a6496;
-
+$text-action-link: #2a6496;
 /* --------- /Variables --------- */
 
 /* --------- Mixins --------- */
-.fitparent(){
+@define-mixin fitparent{
   position: absolute;
   top: 0; right: 0; bottom: 0; left: 0;
 }
 
-.clearfix() {
+@define-mixin clearfix{
   &:before,
   &:after {
-    content: " "; // 1
-    display: table; // 2
+    content: " "; 
+    display: table; 
   }
   &:after {
     clear: both;
