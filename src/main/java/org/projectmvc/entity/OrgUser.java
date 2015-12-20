@@ -2,7 +2,7 @@ package org.projectmvc.entity;
 
 public class OrgUser extends BaseEntity<OrgUser.Id>{
 
-	private String orgRoles;
+	private String roles;
 
 	// --------- Entity Composite ID Accessors --------- //
 	public Long getOrgId() {
@@ -22,12 +22,12 @@ public class OrgUser extends BaseEntity<OrgUser.Id>{
 	}
 	// --------- /Entity Composite ID Accessors --------- //
 
-	public String getOrgRoles() {
-		return orgRoles;
+	public String getRoles() {
+		return roles;
 	}
 
-	public void setOrgRoles(String orgRoles) {
-		this.orgRoles = orgRoles;
+	public void setRoles(String roles) {
+		this.roles = roles;
 	}
 
 	public static class Id{

@@ -11,6 +11,7 @@ public enum AccessError implements ErrorType {
 	NO_ORG_IN_CONTEXT("No org in context for this user"),
 	FAILED_ORG_ACCESS("User{%s} failed to access orgId{%s} for privileges %s"), // userId, orgId, privilege
 	FAILED_PROJECT_ACCESS("User{%s} failed to access projectId{%s} for privileges %s"), // userId, projectId, privilege
+	FAILED_SYSTEM_ACCESS("User{%s} dos not have System privileges %s"), // userId, privilege
 
 	DAO_METHOD_NO_USER("Dao method %s.%s does not conform to Access requirement (User as first argument)"), // declaringClassName, methodName
 	DAO_METHOD_NO_ENTITY("Dao method %s.%s does not conform to Access requirement (No entity in arguments)"), // declaringClassName, methodName

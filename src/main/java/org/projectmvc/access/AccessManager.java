@@ -67,10 +67,9 @@ public class AccessManager {
 		// if not, then, we load more
 		if (Access.UNKOWN == access) {
 			loadProjectPrivilege(uac, project);
+			// get access again
+			access = uac.checkProjectAccess(project.getId(), privileges);
 		}
-
-		// get access again
-		access = uac.checkProjectAccess(project.getId(), privileges);
 
 		// TODO: do the full check. Need to put a Logic.Warning if still Access.UNKNOW
 		switch (access) {
@@ -103,10 +102,9 @@ public class AccessManager {
 		// if not, then, we load more
 		if (Access.UNKOWN == access) {
 			loadOrgPrivilege(uac, orgId);
+			// get access again
+			access = uac.checkOrgAccess(orgId, privileges);
 		}
-
-		// get access again
-		access = uac.checkOrgAccess(orgId, privileges);
 
 		// TODO: do the full check. Need to put a Logic.Warning if still Access.UNKNOW
 		switch (access) {
@@ -121,8 +119,8 @@ public class AccessManager {
 	private void loadOrgPrivilege(UserAccessContext uac, Long orgId){
 		Optional<OrgUser> orgUser = orgUserDao.get(null,new OrgUser.Id(orgId,uac.getUserId()));
 		if (orgUser.isPresent()) {
-			// assuming single role for now (lated, we should split the orgRoles by "," if multiple)
-			OrgRole orgRole = jomni.as(OrgRole.class,orgUser.get().getOrgRoles());
+			// assuming single role for now (later, we should split the orgRoles by "," if multiple)
+			OrgRole orgRole = jomni.as(OrgRole.class,orgUser.get().getRoles());
 			uac.addOrgPrivileges(orgId, orgRole.getOrgPrivileges());
 		}else{
 			// we init with no privileges (which basically make it Access.Denied next time)
@@ -131,4 +129,42 @@ public class AccessManager {
 	}
 	// --------- /Org Privilege Assertions --------- //
 
+	// --------- System Privilege Assertions --------- //
+	public void assertSystemPrivilege(UserAccessContext uac, SystemPrivilege... systemPrivileges){
+
+		// get the Access
+		Access access = uac.checkSystemAccess(systemPrivileges);
+
+		// if not, then, we load it
+		if (Access.UNKOWN == access) {
+			loadSystemPrivileges(uac);
+			access = uac.checkSystemAccess(systemPrivileges);
+		}
+
+
+		// TODO: do the full check. Need to put a Logic.Warning if still Access.UNKNOW
+		switch (access) {
+			case APPROVED:
+				return;
+			case DENIED:
+			case UNKOWN:
+				throw new AppException(AccessError.FAILED_SYSTEM_ACCESS,uac.getUserId(), systemPrivileges);
+		}
+	}
+
+	private void loadSystemPrivileges(UserAccessContext uac){
+		Long sysadmin_org_id = 1L; // The sysadmin org is harcoded to 1 and seeded on database setup.
+
+		Optional<OrgUser> orgUser = orgUserDao.get(null,new OrgUser.Id(sysadmin_org_id,uac.getUserId()));
+
+		if (orgUser.isPresent()) {
+			// assuming single role for now (later, we should split the orgRoles by "," if multiple)
+			SystemRole orgRole = jomni.as(SystemRole.class,orgUser.get().getRoles());
+			uac.addSystemPrivileges(orgRole.getOrgPrivileges());
+		}else{
+			// we init with no privileges (which basically make it Access.Denied next time)
+			uac.addSystemPrivileges(null);
+		}
+	}
+	// --------- /System Privilege Assertions --------- //
 }

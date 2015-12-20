@@ -25,6 +25,9 @@ public class UserAccessContext {
 	private final Map<String, EntityAccess<ProjectPrivilege>> projectAccessByEntityKey = new HashMap<>();
 	private final Map<String, EntityAccess<OrgPrivilege>> orgAccessByEntityKey = new HashMap<>();
 
+	// this will be initialized when loaded
+	private EntityAccess<SystemPrivilege> systemAccess = null;
+
 	UserAccessContext(Long userId) {
 		if (userId == null) {
 			throw new RuntimeException("can't create a UserAccessContext with null userId");
@@ -40,8 +43,13 @@ public class UserAccessContext {
 	public Access checkOrgAccess(Long orgId, OrgPrivilege... privileges){
 		return checkAccess(OrgPrivilege.class, orgAccessByEntityKey, Org.class, orgId, privileges);
 	}
+
 	public Access checkProjectAccess(Long projectId, ProjectPrivilege... privileges){
 		return checkAccess(ProjectPrivilege.class, projectAccessByEntityKey, Project.class, projectId, privileges);
+	}
+
+	public Access checkSystemAccess(SystemPrivilege... privileges){
+		return checkAccess(systemAccess, privileges);
 	}
 
 	private <P extends Enum> Access checkAccess(Class<P> privilegeClass, Map<String, EntityAccess<P>> entityAccessDic,
@@ -52,6 +60,13 @@ public class UserAccessContext {
 		String key = entityKey(entityClass,entityId);
 		EntityAccess<P> entityAccess = entityAccessDic.get(key);
 
+		return checkAccess(entityAccess, privileges);
+	}
+
+	private <P extends Enum> Access checkAccess(EntityAccess<P> entityAccess,
+												P... privileges){
+
+		// If the entityAccess has not been created for this user, then, we return UNKNOWN
 		if (entityAccess == null){
 			return Access.UNKOWN;
 		}else {
@@ -65,6 +80,7 @@ public class UserAccessContext {
 			return (pass)?Access.APPROVED:Access.DENIED;
 		}
 	}
+
 	// --------- /Check Privilege --------- //
 
 	// --------- Add Approved Privileges --------- //
@@ -74,6 +90,17 @@ public class UserAccessContext {
 
 	void addOrgPrivileges(Long orgId, OrgPrivilege... privileges) {
 		addApprovePrivileges(OrgPrivilege.class, orgAccessByEntityKey, Org.class, orgId, privileges);
+	}
+
+	void addSystemPrivileges(SystemPrivilege... privileges) {
+		// if the systemAccess does not exist, we create it. This way, from now on, we checkSystem
+		if (systemAccess == null){
+			systemAccess = new EntityAccess<SystemPrivilege>();
+		}
+
+		if (privileges != null) {
+			systemAccess.addApprove(privileges);
+		}
 	}
 
 	private <P extends Enum> void addApprovePrivileges(Class<P> privilegeClass,

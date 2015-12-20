@@ -23,20 +23,17 @@ import java.util.Optional;
 /**
  * This is the AccessInterceptor for the Dao Classes.
  *
- * Later, we will have some for WebRequest, like WebAccessInterceptor and have the AccessInterceptor as a base class.
+ * - This interceptor should be bound in the AppModule to all Dao methods that need to be guarded.
+ *
+ * - The responsibility its invoke method is to call the AccessManager access check methods given the annotation
+ *   of the method intercepted.
  *
  */
 public class DaoAccessInterceptor implements MethodInterceptor {
 
 
 	@Inject
-	PerfManager perfManager;
-
-	@Inject
 	AccessManager accessManager;
-
-	@Inject
-	CurrentRequestContextHolder crch;
 
 	@Override
 	public Object invoke(MethodInvocation invocation) throws Throwable {
@@ -102,6 +99,15 @@ public class DaoAccessInterceptor implements MethodInterceptor {
 		return obj;
 	}
 
+	/**
+	 * In the current implementation, the convention is that any guarded dao method must have first first
+	 * parameter being the user to be asserted.
+	 *
+	 * Note: Obviously, this can be changed for different project. The other approach is to use the
+	 *       CurrentRequestContextHolder to get the currently authenticated user, however, while this is appropriate
+	 *       for WebAccessInterceptor, it is a little bit out of place in the case
+	 *
+	 */
 	private User findUser(MethodInvocation invocation) {
 		Object[] args = invocation.getArguments();
 		Object obj = args[0];
@@ -125,6 +131,7 @@ public class DaoAccessInterceptor implements MethodInterceptor {
 
 	/**
 	 * Here to keep the calling simpler, we always return an array, even when the return value has only entity or one optional.
+	 *
 	 * @param returnedObject could be the entity, the optional of an entity, or a list of entities (this is the three returned uspported for now)
 	 * @return
 	 */

@@ -54,6 +54,17 @@ public class BaseTestSupport  extends SnowTestSupport{
 		//da.create("user", testUser1UsernamePwd);
 	}
 
+	// --------- Login Utilities --------- //
+	/**
+	 * Login as a username/pwd using the /login REST api, and return the cookie to be used in subsequent REST calls.
+	 */
+	protected Map doLogin(String username, String pwd){
+		Map cookieMap = doPost("/login", mapIt("username", username, "pwd", pwd)).getCookieMap();
+		return cookieMap;
+	}
+	// --------- /Login Utilities --------- //
+
+	// --------- Entity Create Utilities --------- //
 	protected User createTestUser1() {
 		UserDao userDao = appInjector.getInstance(UserDao.class);
 		AccessManager accessManager = appInjector.getInstance(AccessManager.class);
@@ -71,4 +82,5 @@ public class BaseTestSupport  extends SnowTestSupport{
 		accessManager.initUserAccessContext(user);
 		return user;
 	}
+	// --------- /Entity Create Utilities --------- //
 }

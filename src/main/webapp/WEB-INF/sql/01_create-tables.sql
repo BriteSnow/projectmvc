@@ -45,7 +45,7 @@ CREATE TABLE orguser
 (
 	"orgId" bigint NOT NULL,
 	"userId" bigint NOT NULL,
-	"orgRoles" character varying(128),
+	roles character varying(128),
 
 	-- Timestamp data
 	"cid" bigInt,

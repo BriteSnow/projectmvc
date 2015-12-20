@@ -18,10 +18,8 @@ import com.google.inject.matcher.Matchers;
 import com.googlecode.gentyref.GenericTypeReflector;
 import org.jomni.JomniMapper;
 import org.projectmvc.access.DaoAccessInterceptor;
-import org.projectmvc.access.annotation.AssertParamOrgPrivileges;
-import org.projectmvc.access.annotation.AssertParamProjectPrivileges;
-import org.projectmvc.access.annotation.AssertReturnOrgPrivileges;
-import org.projectmvc.access.annotation.AssertReturnProjectPrivileges;
+import org.projectmvc.access.WebAccessInterceptor;
+import org.projectmvc.access.annotation.*;
 import org.projectmvc.dao.BaseDao;
 import org.projectmvc.dao.DaoHelper;
 import org.projectmvc.dao.DaoRegistry;
@@ -82,18 +80,34 @@ public class AppModule extends AbstractModule {
 		// bind the perf interceptor
 		PerfInterceptor perfInterceptor = new PerfInterceptor();
 		requestInjection(perfInterceptor);
+		// any class extending BaseDao, or annotated with ToMonitory, or the DaoHelper.
 		Matcher perfClassMatcher = Matchers.subclassesOf(BaseDao.class)
 				.or(Matchers.annotatedWith(ToMonitor.class)).or(matchAnyOf(DaoHelper.class));
 		bindInterceptor(perfClassMatcher, nonSyntheticMethodMatcher() , perfInterceptor);
 		// --------- /Performance Interceptor --------- //
 
-		// --------- Access Interceptor --------- //
+		// --------- DAO Access Interceptor --------- //
 		DaoAccessInterceptor daoAccessInterceptor = new DaoAccessInterceptor();
 		requestInjection(daoAccessInterceptor);
 		Matcher accessClassMatcher = Matchers.subclassesOf(BaseDao.class);
 		Matcher accessMethodMatcher = annotatedWithAnyOf(assertPrivilegeAnnotations).and(nonSyntheticMethodMatcher());
 		bindInterceptor(accessClassMatcher,accessMethodMatcher, daoAccessInterceptor);
-		// --------- /Access Interceptor --------- //
+		// --------- /DAO Access Interceptor --------- //
+
+		// --------- WebSystem Interceptor --------- //
+		WebAccessInterceptor webAccessInterceptor = new WebAccessInterceptor();
+		requestInjection(webAccessInterceptor);
+		// any class annotated with Singleton (which all Web Handler classes need to be annotated with)
+		Matcher webSystemClassMatcher = Matchers.annotatedWith(javax.inject.Singleton.class);
+		Matcher webSystemMethodMatcher = annotatedWithAnyOf(AssertWebSystemPrivileges.class).and
+				(nonSyntheticMethodMatcher());
+		// Note: We could also add the requirement to match a @Web[REST] annotation but in
+		//       a way, if a method is annotated with @AssertWebSystemPrivileges and is not a "@Web[REST]" method,
+		//       then, it should throw an error/warning.
+
+		bindInterceptor(webSystemClassMatcher,webSystemMethodMatcher, webAccessInterceptor);
+		// --------- /WebSystem Interceptor --------- //
+
 
 		// --------- For DaoRegistry --------- //
 		// Find and bind the dao for each Entity class (and create a genericDao instance if none defined).
@@ -136,7 +150,6 @@ public class AppModule extends AbstractModule {
 	 */
 	static private Matcher nonSyntheticMethodMatcher(){
 		Matcher m = new AbstractMatcher<Method>() {
-
 			@Override
 			public boolean matches(Method m) {
 				return !m.isSynthetic();

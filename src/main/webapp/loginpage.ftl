@@ -172,7 +172,10 @@
 				</div>
 				<div class="form-group">
 					<input id="input-pwd" name="pwd" type="password" class="form-control dx" placeholder="Password">
-				</div>				
+				</div>
+				<div class="form-group show-for-register">
+					<input id="input-pwd-repeat" type="password" name="pwdRepeat" class="form-control" placeholder="Repeat Password">
+				</div>
 				<button id="submit-button" type="submit" name="SIGNIN" class="btn btn-primary login-label">Sign In</button>
 			</div>
 		</div> <!-- /.panel-body -->
