@@ -10,7 +10,10 @@ var ext_replace = require('gulp-ext-replace');
 
 var hbsPrecompile = hbsp.precompile;
 
-var dbPrefix = "pmvc";
+
+var appName = "projectmvc";
+
+
 var webappDir = "src/main/webapp/";
 var sqlDir = "src/main/webapp/WEB-INF/sql/";
 
@@ -96,5 +99,5 @@ gulp.task('pcss-sysadmin', function() {
 
 gulp.task('recreateDb', function(){
 		vdev.psql("postgres", null, "postgres", vdev.listSqlFiles(sqlDir,{to:0}));      
-		vdev.psql(dbPrefix + "_user", null, dbPrefix + "_db", vdev.listSqlFiles(sqlDir,{from:1}));
+		vdev.psql(appName + "_user", null, appName + "_db", vdev.listSqlFiles(sqlDir,{from:1}));
 });
