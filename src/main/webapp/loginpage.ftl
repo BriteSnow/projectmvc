@@ -12,7 +12,7 @@
 --> 
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>ProjectMVC: TaskManager - Login Page</title>
+	<title>projectmvc - Login</title>
 
 	<!-- TODO: needs to remove that to make it faster --> 
 	<link rel="stylesheet" href="${_r.contextPath}/bootstrap/css/bootstrap.min.css" type="text/css" />
