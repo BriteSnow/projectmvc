@@ -98,6 +98,6 @@ gulp.task('pcss-sysadmin', function() {
 // --------- /Web Assets Processing --------- //
 
 gulp.task('recreateDb', function(){
-		vdev.psql("postgres", null, "postgres", vdev.listSqlFiles(sqlDir,{to:0}));      
-		vdev.psql(appName + "_user", null, appName + "_db", vdev.listSqlFiles(sqlDir,{from:1}));
+	vdev.pg.psqlImport({user:"postgres", db:"postgres"}, vdev.pg.listSqlFiles(sqlDir,{to:0}));      
+	vdev.pg.psqlImport({user: appName + "_user", db: appName + "_db"}, vdev.pg.listSqlFiles(sqlDir,{from:1}));
 });
