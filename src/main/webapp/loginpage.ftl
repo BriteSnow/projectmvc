@@ -18,7 +18,7 @@
 	<link rel="stylesheet" href="${_r.contextPath}/bootstrap/css/bootstrap.min.css" type="text/css" />
 	<!-- <link rel="stylesheet" href="${_r.contextPath}/bootstrap/css/bootstrap-theme.min.css" type="text/css" /> -->
 
-	<script src="common/js/0_jquery.min.js"></script>
+	<script src="src/js-lib/0_jquery.min.js"></script>
 	
 	<style>
 	html,body{
