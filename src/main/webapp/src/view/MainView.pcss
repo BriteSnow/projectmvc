@@ -1,21 +1,51 @@
 @import "../pcss/utils.pcss";
 
 .MainView{
-	@mixin fitparent;
-	
-	.MainView-content{
-		position: absolute; 
-		top: 50px; right: 0; bottom: 0; left: 0;
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+
+	> header{
+		@mixin flex-hcenter-ctn;
+		border-bottom: 1px solid #ddd;
+
+		.inner{
+			flex-grow: 1;
+			max-width: 900px;
+		}		
+
+		.logo{
+			display: block;
+			float: left;
+			margin-top: 8px;
+			font-size: 24px;			
+		}
+		.user{
+			float: right;
+		}
 	}
 
-	.MainView-leftPanel{
-		position: absolute;
-		top: 0; bottom: 0; left: 0;
-		width: 180px;
+	.MainView-frame{
+		@mixin flex-hcenter-ctn;
+
+		.inner{
+			flex-grow: 1;
+			max-width: 900px;
+			display: flex;
+			flex-direction: row;	
+
+			.MainView-left{
+				width: 180px;
+			}
+
+			.MainView-content{
+				flex-grow: 1;
+				position: relative;
+			}		
+		}
+
+
 	}
 
-	.MainView-contentPanel{
-		position: absolute;
-		top: 0; bottom: 0; right: 0; left: 180px;
-	}
+
 }

@@ -1,13 +1,23 @@
+
 /* --------- Variables --------- */
 $text-action-link: #2a6496;
 /* --------- /Variables --------- */
 
-/* --------- Mixins --------- */
-@define-mixin fitparent{
-  position: absolute;
-  top: 0; right: 0; bottom: 0; left: 0;
-}
+/* --------- Dim Variables --------- */
+$frame-max-width: 1200px;
 
+/* --------- /Dim Variables --------- */
+
+/* --------- Layout Mixins --------- */
+@define-mixin flex-hcenter-ctn{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;  
+}
+/* --------- /Layout Mixins --------- */
+
+
+/* --------- legacy Mixins --------- */
 @define-mixin clearfix{
   &:before,
   &:after {
@@ -18,4 +28,4 @@ $text-action-link: #2a6496;
     clear: both;
   }
 }
-/* --------- /Mixins --------- */
+/* --------- /legacy Mixins --------- */

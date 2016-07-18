@@ -11,13 +11,13 @@
 			// ADVANCED FEATURE: if not sure, you can add this brite.display in the postDisplay. 
 			// Here, we display the leftPanel before the Main view is displayed. We return the whenInit, because we want 
 			// to wait until the ProjectListView is fully initialized, but not wait until it is considered postDisplay
-			return brite.display("ProjectListView",view.$el.find(".MainView-leftPanel")).whenInit;
+			return brite.display("ProjectListView",view.$el.find(".MainView-left")).whenInit;
 		},
 
 		postDisplay: function(){
 			var view = this;
-			view.$contentPanel = view.$el.find(".MainView-contentPanel");
-			view.$navHeader = view.$el.find("nav:first");
+			view.$contentPanel = view.$el.find(".MainView-content");
+			view.$navHeader = view.$el.find("header:first");
 			app.fetchUser();
 		}, 
 
@@ -46,7 +46,7 @@
 							// destroy eventual brite.js sub views
 							view.$contentPanel.bEmpty();
 							// display the projectt
-							brite.display("ProjectView",view.$el.find(".MainView-contentPanel"),{project:project});
+							brite.display("ProjectView",view.$contentPanel,{project:project});
 
 							view.currentProjectId = newProjectId;
 						});						
