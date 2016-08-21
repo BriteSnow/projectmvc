@@ -25,6 +25,8 @@ templates.js
 *.css
 !src/main/webapp/bootstrap/css/*
 
+# prevent the .map
+*.map
 
 # remove intellij stuff
 *.iml
