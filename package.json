@@ -4,7 +4,6 @@
   "description": "ProjectMVC application (this is not and should not be a node module)",
   "main": "gulpfile.js",
   "dependencies": {
-    "autoprefixer": "*",
     "del": "*",
     "fs": "*",
     "gulp": "*",

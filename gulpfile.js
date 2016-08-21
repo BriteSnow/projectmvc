@@ -20,7 +20,6 @@ var sqlDir = "src/main/webapp/WEB-INF/sql/";
 // --------- postcss require --------- //
 var postcss = require('gulp-postcss');
 var cssImport = require('postcss-import'); // to allow mixin imports
-var autoprefixer = require('autoprefixer');
 var postcssMixins = require("postcss-mixins");
 var postcssSimpleVars = require("postcss-simple-vars");
 var postcssNested = require("postcss-nested");
@@ -31,8 +30,7 @@ var processors = [
 	postcssMixins,
 	postcssSimpleVars,
 	postcssNested,
-	cssnext,
-	autoprefixer({ browsers: ['last 2 versions'] })
+	cssnext({ browsers: ['last 2 versions'] })
 ];
 // --------- /postcss require --------- //
 
