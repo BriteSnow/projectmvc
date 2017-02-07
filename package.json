@@ -5,7 +5,6 @@
   "main": "gulpfile.js",
   "dependencies": {
     "del": "*",
-    "fs": "*",
     "gulp": "*",
     "gulp-concat": "*",
     "gulp-ext-replace": "*",

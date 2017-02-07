@@ -10,6 +10,7 @@ import org.projectmvc.entity.User;
 
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 import static org.j8ql.query.Query.insert;
@@ -213,7 +214,7 @@ public  class BaseDao<E extends BaseEntity,I> implements IDao<E,I> {
 	private Set<String> populateTimestamp(User user, E entity, Set<String> columns){
 		if (user != null){
 			Long userId = user.getId();
-			LocalDateTime now = LocalDateTime.now();
+			ZonedDateTime now = ZonedDateTime.now();
 			entity.setCid(userId);
 			entity.setCtime(now);
 			entity.setMid(userId);

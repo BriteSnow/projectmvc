@@ -1,6 +1,7 @@
 package org.projectmvc.entity;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Optional;
 
 /**
@@ -16,9 +17,9 @@ public abstract class BaseEntity<I>{
 
 	//// timestamp
 	private Long cid; // creator user id
-	private LocalDateTime ctime; // creation time
+	private ZonedDateTime ctime; // creation time
 	private Long mid; // last modifier user time
-	private LocalDateTime mtime; // last modifier time
+	private ZonedDateTime mtime; // last modifier time
 
 	public I getId() {
 				return id;
@@ -49,11 +50,11 @@ public abstract class BaseEntity<I>{
 		this.cid = cid;
 	}
 
-	public LocalDateTime getCtime() {
+	public ZonedDateTime getCtime() {
 		return ctime;
 	}
 
-	public void setCtime(LocalDateTime ctime) {
+	public void setCtime(ZonedDateTime ctime) {
 		this.ctime = ctime;
 	}
 
@@ -65,11 +66,11 @@ public abstract class BaseEntity<I>{
 		this.mid = mid;
 	}
 
-	public LocalDateTime getMtime() {
+	public ZonedDateTime getMtime() {
 		return mtime;
 	}
 
-	public void setMtime(LocalDateTime mtime) {
+	public void setMtime(ZonedDateTime mtime) {
 		this.mtime = mtime;
 	}
 

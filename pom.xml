@@ -47,7 +47,6 @@
 						<configuration>
 							<tasks>
 								<exec executable="gulp">
-									<arg line="default"/>
 								</exec> 
 							</tasks>
 						</configuration>
@@ -103,7 +102,7 @@
 		<dependency>
 			<groupId>com.britesnow</groupId>
 			<artifactId>snow</artifactId>
-			<version>2.0.7-SNAPSHOT</version>
+			<version>2.0.7</version>
 		</dependency>
 
 		<!-- /Snow -->
@@ -117,7 +116,7 @@
 		<dependency>
 			<groupId>org.j8ql</groupId>
 			<artifactId>j8ql</artifactId>
-			<version>0.5.5-SNAPSHOT</version>
+			<version>0.5.6</version>
 		</dependency>  
 
 		<dependency>

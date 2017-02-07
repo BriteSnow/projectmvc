@@ -18,9 +18,12 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.management.*;
 import java.lang.management.ManagementFactory;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Stream;
 
+import static java.time.ZoneOffset.UTC;
 import static org.j8ql.query.Query.*;
 
 /**
@@ -90,7 +93,8 @@ public class DaoHelper {
 			throw Throwables.propagate(e);
 		}
 
-		db = new DBBuilder().build(ds);
+		DBBuilder builder = new DBBuilder();
+		db = builder.build(ds);
 		jomni = db.mapper;
 		//System.out.println("DaoHelper ..... create pool END");
 	}
